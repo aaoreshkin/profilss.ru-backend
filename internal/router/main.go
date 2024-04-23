@@ -47,6 +47,7 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 func userRouter(manager *internal.Manager) http.Handler {
 	r := chi.NewRouter()
 
+	r.Post("/", manager.User.UserController.Post)
 	r.Get("/", manager.User.UserController.Get)
 	// r.Route("/{userID}", func(r chi.Router) {
 	// 	r.Get("/", getUser)

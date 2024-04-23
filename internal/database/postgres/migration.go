@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"github.com/oreshkindev/profilss.ru-backend/common"
 	"github.com/oreshkindev/profilss.ru-backend/internal/user/entity"
 )
 
@@ -50,14 +51,21 @@ func SeedAccessLevel(database *Postgres) error {
 func SeedUser(database *Postgres) error {
 	var accessLevelID string
 
+	// Get access level id by title
 	if err := database.Model(&entity.AccessLevel{}).Select("id").Where("title = ?", "Администратор").First(&accessLevelID).Error; err != nil {
+		return err
+	}
+
+	// Hash entity raw password
+	hashedPassword, err := common.HashPassword("password")
+	if err != nil {
 		return err
 	}
 
 	user := []entity.User{
 		{
 			Email:         "oreshkin.dev@outlook.com",
-			Password:      "qwerty",
+			Password:      hashedPassword,
 			AccessLevelID: accessLevelID,
 		},
 	}

@@ -3,7 +3,6 @@ package repository
 import (
 	"github.com/oreshkindev/profilss.ru-backend/internal/database"
 	"github.com/oreshkindev/profilss.ru-backend/internal/user/entity"
-	"gorm.io/gorm/clause"
 )
 
 type UserRepository struct {
@@ -14,12 +13,12 @@ func NewUserRepository(database *database.Database) *UserRepository {
 	return &UserRepository{database: database}
 }
 
+func (repository *UserRepository) Post(entity *entity.User) (*entity.User, error) {
+	return entity, repository.database.Create(&entity).Error
+}
+
 func (repository *UserRepository) Get() ([]entity.User, error) {
 	entity := []entity.User{}
 
-	if r := repository.database.Preload(clause.Associations).Find(&entity); r.Error != nil {
-		return nil, r.Error
-	}
-
-	return entity, nil
+	return entity, repository.database.Find(&entity).Error
 }
