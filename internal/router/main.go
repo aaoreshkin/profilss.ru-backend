@@ -12,10 +12,19 @@ import (
 	"github.com/oreshkindev/profilss.ru-backend/internal"
 )
 
-type Router struct {
-	*chi.Mux
-	manager *internal.Manager
-}
+type (
+	Router struct {
+		*chi.Mux
+		manager *internal.Manager
+	}
+
+	Rule string
+)
+
+const (
+	Superuser Rule = "Superuser"
+	Manager   Rule = "Manager"
+)
 
 func NewRouter(manager *internal.Manager) (*Router, error) {
 	router := &Router{chi.NewRouter(), manager}
@@ -37,13 +46,14 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 }
 
 func (router *Router) UserHandler() chi.Router {
-	router.Get("/", router.RBACMiddleware("W")(router.manager.User.UserController.Get))
+	router.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", router.manager.User.UserController.Get)
+
 	return router
 }
 
-func (router *Router) RBACMiddleware(requiredPermissionRule string) func(http.HandlerFunc) http.HandlerFunc {
-	return func(handler http.HandlerFunc) http.HandlerFunc {
-		return func(w http.ResponseWriter, r *http.Request) {
+func (router *Router) RBACMiddleware(requiredRule []Rule) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			tokenString := r.Header.Get("Authorization")
 			if tokenString == "" {
 				render.Render(w, r, common.ErrInvalidRequest(fmt.Errorf("empty token")))
@@ -51,7 +61,7 @@ func (router *Router) RBACMiddleware(requiredPermissionRule string) func(http.Ha
 			}
 			tokenString = tokenString[len("Bearer "):]
 
-			// Parse token and check it
+			// Parse the token string into a jwt.Token struct
 			parsedToken, err := common.ParseToken(tokenString)
 			if err != nil {
 				render.Render(w, r, common.ErrInvalidRequest(err))
@@ -62,19 +72,21 @@ func (router *Router) RBACMiddleware(requiredPermissionRule string) func(http.Ha
 			permissionID := common.GetPermissionID(parsedToken)
 
 			// Get permission rule from database by permissionID
-			permissionRule, err := router.manager.User.PermissionController.Get(permissionID)
+			permission, err := router.manager.User.PermissionController.Get(permissionID)
 			if err != nil {
 				render.Render(w, r, common.ErrInvalidRequest(err))
 				return
 			}
 
-			// Check if permission rule is equal required
-			if permissionRule != requiredPermissionRule {
-				render.Render(w, r, common.ErrInvalidRequest(fmt.Errorf("permission denied")))
-				return
-			}
+			// Check if permission rule has required permission
+			for _, rule := range requiredRule {
+				if permission.Rule == string(rule) {
+					next.ServeHTTP(w, r)
+					return
+				}
 
-			handler(w, r)
-		}
+				render.Render(w, r, common.ErrInvalidRequest(fmt.Errorf("permission rule %s is not allowed", permission.Rule)))
+			}
+		})
 	}
 }

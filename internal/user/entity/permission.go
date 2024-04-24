@@ -1,6 +1,6 @@
 package entity
 
-// Rules: F - forbidden, R - read, W - write
+// Rules: S - superuser, M - manager, G - guest
 
 type (
 	Permission struct {

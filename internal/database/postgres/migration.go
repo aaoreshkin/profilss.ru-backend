@@ -38,13 +38,13 @@ func DropTables(database *Postgres) error {
 func SeedPermission(database *Postgres) error {
 	roles := []entity.Permission{
 		{
-			Rule: "W",
+			Rule: "Superuser",
 		},
 		{
-			Rule: "R",
+			Rule: "Manager",
 		},
 		{
-			Rule: "F",
+			Rule: "Guest",
 		},
 	}
 
@@ -64,7 +64,7 @@ func SeedUser(database *Postgres) error {
 	var permissionID string
 
 	// Get permissionID by title
-	if err := database.Model(&entity.Permission{}).Select("id").Where("rule = ?", "W").First(&permissionID).Error; err != nil {
+	if err := database.Model(&entity.Permission{}).Select("id").Where("rule = ?", "Superuser").First(&permissionID).Error; err != nil {
 		return err
 	}
 

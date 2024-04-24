@@ -14,11 +14,11 @@ func NewPermissionController(usecase entity.PermissionUsecase) *PermissionContro
 	}
 }
 
-func (controller *PermissionController) Get(rule string) (string, error) {
+func (controller *PermissionController) Get(rule string) (*entity.Permission, error) {
 	result, err := controller.usecase.Get(rule)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return result.Rule, nil
+	return result, nil
 }
