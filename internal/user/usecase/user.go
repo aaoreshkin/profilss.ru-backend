@@ -30,7 +30,7 @@ func (usecase *UserUsecase) Post(entity *entity.User) (*entity.User, error) {
 	entity.Password = hashedPassword
 
 	// Hash access token
-	hashedToken, err := common.GenerateJWT(entity.Email, entity.PermissionID)
+	hashedToken, err := common.HashToken(entity.Email, entity.PermissionID)
 	if err != nil {
 		return nil, err
 	}

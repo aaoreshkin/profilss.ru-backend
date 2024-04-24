@@ -8,7 +8,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/oreshkindev/profilss.ru-backend/common"
 	"github.com/oreshkindev/profilss.ru-backend/internal"
 )
@@ -42,7 +41,7 @@ func (router *Router) UserHandler() chi.Router {
 	return router
 }
 
-func (router *Router) RBACMiddleware(requiredPermissionTitle string) func(http.HandlerFunc) http.HandlerFunc {
+func (router *Router) RBACMiddleware(requiredPermissionRule string) func(http.HandlerFunc) http.HandlerFunc {
 	return func(handler http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			tokenString := r.Header.Get("Authorization")
@@ -52,29 +51,25 @@ func (router *Router) RBACMiddleware(requiredPermissionTitle string) func(http.H
 			}
 			tokenString = tokenString[len("Bearer "):]
 
-			parsedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-				// Validate the alg is what expect:
-				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-					return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-				}
-				return []byte("secret"), nil
-			})
-
-			if err != nil || !parsedToken.Valid {
-				render.Render(w, r, common.ErrInvalidRequest(err))
-				return
-			}
-
-			// Get access level
-			accessLevelID := common.GetAccessLevelID(parsedToken)
-
-			permissionTitle, err := router.manager.User.PermissionController.Get(accessLevelID)
+			// Parse token and check it
+			parsedToken, err := common.ParseToken(tokenString)
 			if err != nil {
 				render.Render(w, r, common.ErrInvalidRequest(err))
 				return
 			}
 
-			if permissionTitle != requiredPermissionTitle {
+			// Get permissionID from token
+			permissionID := common.GetPermissionID(parsedToken)
+
+			// Get permission rule from database by permissionID
+			permissionRule, err := router.manager.User.PermissionController.Get(permissionID)
+			if err != nil {
+				render.Render(w, r, common.ErrInvalidRequest(err))
+				return
+			}
+
+			// Check if permission rule is equal required
+			if permissionRule != requiredPermissionRule {
 				render.Render(w, r, common.ErrInvalidRequest(fmt.Errorf("permission denied")))
 				return
 			}

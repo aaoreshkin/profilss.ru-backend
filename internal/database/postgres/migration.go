@@ -52,7 +52,7 @@ func SeedPermission(database *Postgres) error {
 }
 
 func SeedUser(database *Postgres) error {
-	const email = "oreshkin@ya.ru"
+	const email = "oreshkin.dev@outlook.com"
 	const password = "password"
 
 	// Hash raw password
@@ -63,13 +63,13 @@ func SeedUser(database *Postgres) error {
 
 	var permissionID string
 
-	// Get access level id by title
+	// Get permissionID by title
 	if err := database.Model(&entity.Permission{}).Select("id").Where("rule = ?", "W").First(&permissionID).Error; err != nil {
 		return err
 	}
 
 	// Hash access token
-	accessToken, err := common.GenerateJWT(email, permissionID)
+	accessToken, err := common.HashToken(email, permissionID)
 	if err != nil {
 		return err
 	}
