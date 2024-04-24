@@ -11,6 +11,10 @@ type Manager struct {
 	UserRepository repository.UserRepository
 	UserUsecase    usecase.UserUsecase
 	UserController controller.UserController
+
+	PermissionRepository repository.PermissionRepository
+	PermissionUsecase    usecase.PermissionUsecase
+	PermissionController controller.PermissionController
 }
 
 func NewManager(database *database.Database) *Manager {
@@ -18,9 +22,17 @@ func NewManager(database *database.Database) *Manager {
 	userUsecase := usecase.NewUserUsecase(userRepository)
 	userController := controller.NewUserController(userUsecase)
 
+	permissionRepository := repository.NewPermissionRepository(database)
+	permissionUsecase := usecase.NewPermissionUsecase(permissionRepository)
+	permissionController := controller.NewPermissionController(permissionUsecase)
+
 	return &Manager{
 		UserRepository: *userRepository,
 		UserUsecase:    *userUsecase,
 		UserController: *userController,
+
+		PermissionRepository: *permissionRepository,
+		PermissionUsecase:    *permissionUsecase,
+		PermissionController: *permissionController,
 	}
 }

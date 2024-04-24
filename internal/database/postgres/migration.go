@@ -8,7 +8,7 @@ import (
 func Migrate(database *Postgres) error {
 	tables := []interface{}{
 		&entity.User{},
-		&entity.AccessLevel{},
+		&entity.Permission{},
 	}
 
 	// Use it for development only
@@ -20,7 +20,7 @@ func Migrate(database *Postgres) error {
 		return err
 	}
 
-	if err := SeedAccessLevel(database); err != nil {
+	if err := SeedPermission(database); err != nil {
 		return err
 	}
 
@@ -35,13 +35,16 @@ func DropTables(database *Postgres) error {
 	return database.Exec("DO $$DECLARE r RECORD; BEGIN FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE'; END LOOP; END;$$").Error
 }
 
-func SeedAccessLevel(database *Postgres) error {
-	roles := []entity.AccessLevel{
+func SeedPermission(database *Postgres) error {
+	roles := []entity.Permission{
 		{
-			Title: "Администратор",
+			Rule: "W",
 		},
 		{
-			Title: "Менеджер",
+			Rule: "R",
+		},
+		{
+			Rule: "F",
 		},
 	}
 
@@ -58,24 +61,24 @@ func SeedUser(database *Postgres) error {
 		return err
 	}
 
-	var accessLevelID string
+	var permissionID string
 
 	// Get access level id by title
-	if err := database.Model(&entity.AccessLevel{}).Select("id").Where("title = ?", "Администратор").First(&accessLevelID).Error; err != nil {
+	if err := database.Model(&entity.Permission{}).Select("id").Where("rule = ?", "W").First(&permissionID).Error; err != nil {
 		return err
 	}
 
 	// Hash access token
-	accessToken, err := common.GenerateJWT(email, accessLevelID)
+	accessToken, err := common.GenerateJWT(email, permissionID)
 	if err != nil {
 		return err
 	}
 
 	user := entity.User{
-		Email:         email,
-		Password:      hashedPassword,
-		AccessLevelID: accessLevelID,
-		AccessToken:   accessToken,
+		Email:        email,
+		Password:     hashedPassword,
+		PermissionID: permissionID,
+		AccessToken:  accessToken,
 	}
 
 	return database.Create(&user).Error

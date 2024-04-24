@@ -38,39 +38,48 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 }
 
 func (router *Router) UserHandler() chi.Router {
-	router.Get("/", router.adminOnly(router.manager.User.UserController.Get))
+	router.Get("/", router.RBACMiddleware("W")(router.manager.User.UserController.Get))
 	return router
 }
 
-// JWT RBAC middleware
-func (router *Router) adminOnly(handler http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		tokenString := r.Header.Get("Authorization")
-		if tokenString == "" {
-			render.Render(w, r, common.ErrInvalidRequest(fmt.Errorf("empty token")))
-			return
+func (router *Router) RBACMiddleware(requiredPermissionTitle string) func(http.HandlerFunc) http.HandlerFunc {
+	return func(handler http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			tokenString := r.Header.Get("Authorization")
+			if tokenString == "" {
+				render.Render(w, r, common.ErrInvalidRequest(fmt.Errorf("empty token")))
+				return
+			}
+			tokenString = tokenString[len("Bearer "):]
+
+			parsedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+				// Validate the alg is what expect:
+				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+					return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+				}
+				return []byte("secret"), nil
+			})
+
+			if err != nil || !parsedToken.Valid {
+				render.Render(w, r, common.ErrInvalidRequest(err))
+				return
+			}
+
+			// Get access level
+			accessLevelID := common.GetAccessLevelID(parsedToken)
+
+			permissionTitle, err := router.manager.User.PermissionController.Get(accessLevelID)
+			if err != nil {
+				render.Render(w, r, common.ErrInvalidRequest(err))
+				return
+			}
+
+			if permissionTitle != requiredPermissionTitle {
+				render.Render(w, r, common.ErrInvalidRequest(fmt.Errorf("permission denied")))
+				return
+			}
+
+			handler(w, r)
 		}
-		tokenString = tokenString[len("Bearer "):]
-
-		parsedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			return []byte("secret"), nil
-		})
-
-		if err != nil {
-			render.Render(w, r, common.ErrInvalidRequest(err))
-			return
-		}
-
-		if !parsedToken.Valid {
-			render.Render(w, r, common.ErrInvalidRequest(err))
-			return
-		}
-
-		// Get access level
-		accessLevelID := common.GetAccessLevelID(parsedToken)
-
-		println(accessLevelID)
-
-		handler(w, r)
 	}
 }
