@@ -49,6 +49,15 @@ func SeedAccessLevel(database *Postgres) error {
 }
 
 func SeedUser(database *Postgres) error {
+	const email = "oreshkin@ya.ru"
+	const password = "password"
+
+	// Hash raw password
+	hashedPassword, err := common.HashPassword(password)
+	if err != nil {
+		return err
+	}
+
 	var accessLevelID string
 
 	// Get access level id by title
@@ -56,18 +65,17 @@ func SeedUser(database *Postgres) error {
 		return err
 	}
 
-	// Hash entity raw password
-	hashedPassword, err := common.HashPassword("password")
+	// Hash access token
+	accessToken, err := common.GenerateJWT(email, accessLevelID)
 	if err != nil {
 		return err
 	}
 
-	user := []entity.User{
-		{
-			Email:         "oreshkin.dev@outlook.com",
-			Password:      hashedPassword,
-			AccessLevelID: accessLevelID,
-		},
+	user := entity.User{
+		Email:         email,
+		Password:      hashedPassword,
+		AccessLevelID: accessLevelID,
+		AccessToken:   accessToken,
 	}
 
 	return database.Create(&user).Error

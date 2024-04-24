@@ -17,6 +17,9 @@ func NewUserUsecase(repository entity.UserRepository) *UserUsecase {
 
 func (usecase *UserUsecase) Post(entity *entity.User) (*entity.User, error) {
 
+	// Создавать пользователей может только администратор
+	// роль назначает тоже администратор
+
 	// Hash entity raw password
 	hashedPassword, err := common.HashPassword(entity.Password)
 	if err != nil {
@@ -25,6 +28,15 @@ func (usecase *UserUsecase) Post(entity *entity.User) (*entity.User, error) {
 
 	// Set hashed password
 	entity.Password = hashedPassword
+
+	// Hash access token
+	hashedToken, err := common.GenerateJWT(entity.Email, entity.AccessLevelID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Set access token
+	entity.AccessToken = hashedToken
 
 	result, err := usecase.repository.Post(entity)
 	if err != nil {

@@ -1,57 +1,76 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/oreshkindev/profilss.ru-backend/common"
 	"github.com/oreshkindev/profilss.ru-backend/internal"
 )
 
 type Router struct {
 	*chi.Mux
+	manager *internal.Manager
 }
 
 func NewRouter(manager *internal.Manager) (*Router, error) {
+	router := &Router{chi.NewRouter(), manager}
 
-	r := chi.NewRouter()
-
-	// Set CORS options once, not per request
-	corsOpts := cors.Options{
+	router.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-	}
-	r.Use(cors.Handler(corsOpts))
+	}))
 
-	/*
-		SetContentType is a middleware function that sets the Content-Type header
-		of the response to the specified content type.
-	*/
+	router.Use(render.SetContentType(render.ContentTypeJSON))
 
-	// Use SetContentType once, not per request
-	r.Use(render.SetContentType(render.ContentTypeJSON))
+	router.Use(middleware.Logger)
 
-	// Use the logger middleware for logging requests
-	r.Use(middleware.Logger)
-
-	r.Route("/v1", func(r chi.Router) {
-		r.Mount("/users", userRouter(manager))
+	router.Route("/v1", func(r chi.Router) {
+		r.Mount("/user", router.UserHandler())
 	})
-
-	return &Router{r}, nil
+	return router, nil
 }
 
-func userRouter(manager *internal.Manager) http.Handler {
-	r := chi.NewRouter()
+func (router *Router) UserHandler() chi.Router {
+	router.Get("/", router.adminOnly(router.manager.User.UserController.Get))
+	return router
+}
 
-	r.Post("/", manager.User.UserController.Post)
-	r.Get("/", manager.User.UserController.Get)
-	// r.Route("/{userID}", func(r chi.Router) {
-	// 	r.Get("/", getUser)
-	// })
+// JWT RBAC middleware
+func (router *Router) adminOnly(handler http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenString := r.Header.Get("Authorization")
+		if tokenString == "" {
+			render.Render(w, r, common.ErrInvalidRequest(fmt.Errorf("empty token")))
+			return
+		}
+		tokenString = tokenString[len("Bearer "):]
 
-	return r
+		parsedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			return []byte("secret"), nil
+		})
+
+		if err != nil {
+			render.Render(w, r, common.ErrInvalidRequest(err))
+			return
+		}
+
+		if !parsedToken.Valid {
+			render.Render(w, r, common.ErrInvalidRequest(err))
+			return
+		}
+
+		// Get access level
+		accessLevelID := common.GetAccessLevelID(parsedToken)
+
+		println(accessLevelID)
+
+		handler(w, r)
+	}
 }
