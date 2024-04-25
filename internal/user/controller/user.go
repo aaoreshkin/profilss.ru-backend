@@ -18,7 +18,7 @@ func NewUserController(usecase entity.UserUsecase) *UserController {
 	}
 }
 
-func (controller *UserController) Post(w http.ResponseWriter, r *http.Request) {
+func (controller *UserController) Create(w http.ResponseWriter, r *http.Request) {
 	entity := &entity.User{}
 
 	if err := render.DecodeJSON(r.Body, entity); err != nil {
@@ -26,7 +26,7 @@ func (controller *UserController) Post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := controller.usecase.Post(entity)
+	result, err := controller.usecase.Create(entity)
 	if err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
 		return
@@ -35,8 +35,8 @@ func (controller *UserController) Post(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, result.NewResponse())
 }
 
-func (controller *UserController) Get(w http.ResponseWriter, r *http.Request) {
-	result, err := controller.usecase.Get()
+func (controller *UserController) Find(w http.ResponseWriter, r *http.Request) {
+	result, err := controller.usecase.Find()
 	if err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
 		return

@@ -41,12 +41,23 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 
 	router.Route("/v1", func(r chi.Router) {
 		r.Mount("/user", router.UserHandler())
+		r.Mount("/post", router.PostHandler())
 	})
 	return router, nil
 }
 
 func (router *Router) UserHandler() chi.Router {
-	router.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", router.manager.User.UserController.Get)
+	router.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", router.manager.User.UserController.Create)
+	router.With(router.RBACMiddleware([]Rule{Superuser})).Get("/", router.manager.User.UserController.Find)
+
+	return router
+}
+
+func (router *Router) PostHandler() chi.Router {
+	router.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", router.manager.Post.PostController.Create)
+	router.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", router.manager.Post.PostController.Find)
+	router.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/{id}", router.manager.Post.PostController.First)
+	router.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", router.manager.Post.PostController.Delete)
 
 	return router
 }
@@ -72,7 +83,7 @@ func (router *Router) RBACMiddleware(requiredRule []Rule) func(http.Handler) htt
 			permissionID := common.GetPermissionID(parsedToken)
 
 			// Get permission rule from database by permissionID
-			permission, err := router.manager.User.PermissionController.Get(permissionID)
+			permission, err := router.manager.User.PermissionController.First(permissionID)
 			if err != nil {
 				render.Render(w, r, common.ErrInvalidRequest(err))
 				return

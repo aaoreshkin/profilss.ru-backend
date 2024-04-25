@@ -13,7 +13,7 @@ func NewPermissionRepository(database *database.Database) *PermissionRepository 
 	return &PermissionRepository{database: database}
 }
 
-func (repository *PermissionRepository) Get(id string) (*entity.Permission, error) {
+func (repository *PermissionRepository) First(id string) (*entity.Permission, error) {
 	entity := entity.Permission{}
 
 	return &entity, repository.database.Where("id = ?", id).First(&entity).Error

@@ -2,13 +2,15 @@ package postgres
 
 import (
 	"github.com/oreshkindev/profilss.ru-backend/common"
-	"github.com/oreshkindev/profilss.ru-backend/internal/user/entity"
+	post "github.com/oreshkindev/profilss.ru-backend/internal/post/entity"
+	user "github.com/oreshkindev/profilss.ru-backend/internal/user/entity"
 )
 
 func Migrate(database *Postgres) error {
 	tables := []interface{}{
-		&entity.User{},
-		&entity.Permission{},
+		&user.User{},
+		&user.Permission{},
+		&post.Post{},
 	}
 
 	// Use it for development only
@@ -36,7 +38,7 @@ func DropTables(database *Postgres) error {
 }
 
 func SeedPermission(database *Postgres) error {
-	roles := []entity.Permission{
+	roles := []user.Permission{
 		{
 			Rule: "Superuser",
 		},
@@ -64,7 +66,7 @@ func SeedUser(database *Postgres) error {
 	var permissionID string
 
 	// Get permissionID by title
-	if err := database.Model(&entity.Permission{}).Select("id").Where("rule = ?", "Superuser").First(&permissionID).Error; err != nil {
+	if err := database.Model(&user.Permission{}).Select("id").Where("rule = ?", "Superuser").First(&permissionID).Error; err != nil {
 		return err
 	}
 
@@ -74,11 +76,11 @@ func SeedUser(database *Postgres) error {
 		return err
 	}
 
-	user := entity.User{
+	user := user.User{
+		AccessToken:  accessToken,
 		Email:        email,
 		Password:     hashedPassword,
 		PermissionID: permissionID,
-		AccessToken:  accessToken,
 	}
 
 	return database.Create(&user).Error

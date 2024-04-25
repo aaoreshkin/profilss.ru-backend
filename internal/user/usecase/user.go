@@ -15,7 +15,7 @@ func NewUserUsecase(repository entity.UserRepository) *UserUsecase {
 	}
 }
 
-func (usecase *UserUsecase) Post(entity *entity.User) (*entity.User, error) {
+func (usecase *UserUsecase) Create(entity *entity.User) (*entity.User, error) {
 
 	// Создавать пользователей может только администратор
 	// роль назначает тоже администратор
@@ -38,7 +38,7 @@ func (usecase *UserUsecase) Post(entity *entity.User) (*entity.User, error) {
 	// Set access token
 	entity.AccessToken = hashedToken
 
-	result, err := usecase.repository.Post(entity)
+	result, err := usecase.repository.Create(entity)
 	if err != nil {
 		return nil, err
 	}
@@ -46,11 +46,6 @@ func (usecase *UserUsecase) Post(entity *entity.User) (*entity.User, error) {
 	return result, nil
 }
 
-func (usecase *UserUsecase) Get() ([]entity.User, error) {
-	result, err := usecase.repository.Get()
-	if err != nil || result == nil {
-		return nil, err
-	}
-
-	return result, nil
+func (usecase *UserUsecase) Find() ([]entity.User, error) {
+	return usecase.repository.Find()
 }

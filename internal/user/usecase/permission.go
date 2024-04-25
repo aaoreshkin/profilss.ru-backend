@@ -14,11 +14,6 @@ func NewPermissionUsecase(repository entity.PermissionRepository) *PermissionUse
 	}
 }
 
-func (usecase *PermissionUsecase) Get(id string) (*entity.Permission, error) {
-	result, err := usecase.repository.Get(id)
-	if err != nil {
-		return nil, err
-	}
-
-	return result, nil
+func (usecase *PermissionUsecase) First(id string) (*entity.Permission, error) {
+	return usecase.repository.First(id)
 }

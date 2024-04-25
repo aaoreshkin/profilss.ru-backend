@@ -9,11 +9,11 @@ type (
 	}
 
 	PermissionUsecase interface {
-		Get(string) (*Permission, error)
+		First(string) (*Permission, error)
 	}
 
 	PermissionRepository interface {
-		Get(string) (*Permission, error)
+		First(string) (*Permission, error)
 	}
 )
 

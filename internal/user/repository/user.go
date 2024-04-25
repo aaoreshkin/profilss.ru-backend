@@ -13,11 +13,11 @@ func NewUserRepository(database *database.Database) *UserRepository {
 	return &UserRepository{database: database}
 }
 
-func (repository *UserRepository) Post(entity *entity.User) (*entity.User, error) {
+func (repository *UserRepository) Create(entity *entity.User) (*entity.User, error) {
 	return entity, repository.database.Create(&entity).Error
 }
 
-func (repository *UserRepository) Get() ([]entity.User, error) {
+func (repository *UserRepository) Find() ([]entity.User, error) {
 	entity := []entity.User{}
 
 	return entity, repository.database.Find(&entity).Error
