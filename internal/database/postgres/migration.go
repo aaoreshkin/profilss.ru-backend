@@ -2,7 +2,9 @@ package postgres
 
 import (
 	"github.com/oreshkindev/profilss.ru-backend/common"
+	bid "github.com/oreshkindev/profilss.ru-backend/internal/bid/entity"
 	post "github.com/oreshkindev/profilss.ru-backend/internal/post/entity"
+	product "github.com/oreshkindev/profilss.ru-backend/internal/product/entity"
 	user "github.com/oreshkindev/profilss.ru-backend/internal/user/entity"
 )
 
@@ -11,6 +13,11 @@ func Migrate(database *Postgres) error {
 		&user.User{},
 		&user.Permission{},
 		&post.Post{},
+		&product.Measure{},
+		&product.Characteristic{},
+		&product.Product{},
+		&product.ProductsCharacteristics{},
+		&bid.Bid{},
 	}
 
 	// Use it for development only
@@ -27,6 +34,14 @@ func Migrate(database *Postgres) error {
 	}
 
 	if err := SeedUser(database); err != nil {
+		return err
+	}
+
+	if err := SeedMeasure(database); err != nil {
+		return err
+	}
+
+	if err := SeedCharacteristic(database); err != nil {
 		return err
 	}
 
@@ -84,4 +99,110 @@ func SeedUser(database *Postgres) error {
 	}
 
 	return database.Create(&user).Error
+}
+
+func SeedMeasure(database *Postgres) error {
+	measure := []product.Measure{
+		{
+			Code:  "г",
+			Title: "Грамм",
+		},
+		{
+			Code:  "кг",
+			Title: "Килограмм",
+		},
+		{
+			Code:  "шт",
+			Title: "Штук",
+		},
+		{
+			Code:  "тн",
+			Title: "Тонна",
+		},
+		{
+			Code:  "м3",
+			Title: "Метр кубический",
+		},
+		{
+			Code:  "м2",
+			Title: "Метр квадратный",
+		},
+		{
+			Code:  "м",
+			Title: "Метр",
+		},
+		{
+			Code:  "см",
+			Title: "Сантиметр",
+		},
+	}
+
+	for i := range measure {
+		err := database.Model(&product.Measure{}).Create(&measure[i]).Error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func SeedCharacteristic(database *Postgres) error {
+	characteristic := []product.Characteristic{
+		{
+			Title:       "Вес",
+			Description: "Вес",
+		},
+		{
+			Title:       "Длина",
+			Description: "Длина",
+		},
+		{
+			Title:       "Ширина",
+			Description: "Ширина",
+		},
+		{
+			Title:       "Высота",
+			Description: "Высота",
+		},
+		{
+			Title:       "Объем",
+			Description: "Объем",
+		},
+		{
+			Title:       "Площадь",
+			Description: "Площадь",
+		},
+		{
+			Title:       "Толщина",
+			Description: "Толщина",
+		},
+		{
+			Title:       "Диаметр",
+			Description: "Диаметр",
+		},
+		{
+			Title:       "Количество",
+			Description: "Количество",
+		},
+		{
+			Title:       "Размер",
+			Description: "Размер",
+		},
+		{
+			Title:       "Глубина",
+			Description: "Глубина",
+		},
+		{
+			Title:       "Вместимость",
+			Description: "Вместимость",
+		},
+	}
+
+	for i := range characteristic {
+		err := database.Model(&product.Characteristic{}).Create(&characteristic[i]).Error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

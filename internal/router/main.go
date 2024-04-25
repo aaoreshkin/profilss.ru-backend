@@ -40,38 +40,93 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 	router.Use(middleware.Logger)
 
 	router.Route("/v1", func(r chi.Router) {
-		r.Mount("/user", router.UserHandler())
-		r.Mount("/post", router.PostHandler())
 		r.Mount("/bid", router.BidHandler())
+		r.Mount("/post", router.PostHandler())
+		r.Mount("/product", router.ProductHandler())
+		r.Mount("/user", router.UserHandler())
 	})
 	return router, nil
 }
 
-func (router *Router) UserHandler() chi.Router {
-	router.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", router.manager.User.UserController.Create)
-	router.With(router.RBACMiddleware([]Rule{Superuser})).Get("/", router.manager.User.UserController.Find)
-	router.With(router.RBACMiddleware([]Rule{Superuser})).Get("/{id}", router.manager.User.UserController.First)
-	router.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", router.manager.User.UserController.Delete)
+func (router *Router) BidHandler() chi.Router {
+	r := chi.NewRouter()
 
-	return router
+	controller := router.manager.Bid.BidController
+
+	r.Post("/", controller.Create)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", controller.Find)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
 }
 
 func (router *Router) PostHandler() chi.Router {
-	router.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", router.manager.Post.PostController.Create)
-	router.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", router.manager.Post.PostController.Find)
-	router.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/{id}", router.manager.Post.PostController.First)
-	router.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", router.manager.Post.PostController.Delete)
+	r := chi.NewRouter()
 
-	return router
+	controller := router.manager.Post.PostController
+
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
+	r.Get("/", controller.Find)
+	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
 }
 
-func (router *Router) BidHandler() chi.Router {
-	router.Post("/", router.manager.Bid.BidController.Create)
-	router.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", router.manager.Bid.BidController.Find)
-	router.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/{id}", router.manager.Bid.BidController.First)
-	router.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", router.manager.Bid.BidController.Delete)
+func (router *Router) ProductHandler() chi.Router {
+	r := chi.NewRouter()
 
-	return router
+	controller := router.manager.Product.ProductController
+
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
+	r.Get("/", controller.Find)
+	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	r.Mount("/characteristic", router.CharacteristicHandler())
+	r.Mount("/measure", router.MeasureHandler())
+
+	return r
+}
+
+func (router *Router) CharacteristicHandler() chi.Router {
+	r := chi.NewRouter()
+
+	controller := router.manager.Product.CharacteristicController
+
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
+	r.Get("/", controller.Find)
+	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
+}
+
+func (router *Router) MeasureHandler() chi.Router {
+	r := chi.NewRouter()
+
+	controller := router.manager.Product.MeasureController
+
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
+	r.Get("/", controller.Find)
+	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
+}
+
+func (router *Router) UserHandler() chi.Router {
+	r := chi.NewRouter()
+
+	controller := router.manager.User.UserController
+
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Get("/", controller.Find)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
 }
 
 func (router *Router) RBACMiddleware(requiredRule []Rule) func(http.Handler) http.Handler {
