@@ -3,23 +3,24 @@ package controller
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/oreshkindev/profilss.ru-backend/common"
-	"github.com/oreshkindev/profilss.ru-backend/internal/user/entity"
+	"github.com/oreshkindev/profilss.ru-backend/internal/bid/entity"
 )
 
-type UserController struct {
-	usecase entity.UserUsecase
+type BidController struct {
+	usecase entity.BidUsecase
 }
 
-func NewUserController(usecase entity.UserUsecase) *UserController {
-	return &UserController{
+func NewBidController(usecase entity.BidUsecase) *BidController {
+	return &BidController{
 		usecase: usecase,
 	}
 }
 
-func (controller *UserController) Create(w http.ResponseWriter, r *http.Request) {
-	entity := &entity.User{}
+func (controller *BidController) Create(w http.ResponseWriter, r *http.Request) {
+	entity := &entity.Bid{}
 
 	if err := render.DecodeJSON(r.Body, entity); err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
@@ -35,7 +36,7 @@ func (controller *UserController) Create(w http.ResponseWriter, r *http.Request)
 	render.JSON(w, r, result.NewResponse())
 }
 
-func (controller *UserController) Find(w http.ResponseWriter, r *http.Request) {
+func (controller *BidController) Find(w http.ResponseWriter, r *http.Request) {
 	result, err := controller.usecase.Find()
 	if err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
@@ -49,9 +50,9 @@ func (controller *UserController) Find(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, result)
 }
 
-func (controller *UserController) First(w http.ResponseWriter, r *http.Request) {
+func (controller *BidController) First(w http.ResponseWriter, r *http.Request) {
 	// get id from request
-	id := r.URL.Query().Get("id")
+	id := chi.URLParam(r, "id")
 
 	result, err := controller.usecase.First(id)
 	if err != nil {
@@ -62,9 +63,9 @@ func (controller *UserController) First(w http.ResponseWriter, r *http.Request) 
 	render.JSON(w, r, result.NewResponse())
 }
 
-func (controller *UserController) Delete(w http.ResponseWriter, r *http.Request) {
+func (controller *BidController) Delete(w http.ResponseWriter, r *http.Request) {
 	// get id from request
-	id := r.URL.Query().Get("id")
+	id := chi.URLParam(r, "id")
 
 	err := controller.usecase.Delete(id)
 	if err != nil {

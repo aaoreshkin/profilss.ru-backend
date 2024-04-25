@@ -13,11 +13,15 @@ type (
 	UserUsecase interface {
 		Create(*User) (*User, error)
 		Find() ([]User, error)
+		First(string) (*User, error)
+		Delete(string) error
 	}
 
 	UserRepository interface {
 		Create(*User) (*User, error)
 		Find() ([]User, error)
+		First(string) (*User, error)
+		Delete(string) error
 	}
 )
 

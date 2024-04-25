@@ -49,3 +49,11 @@ func (usecase *UserUsecase) Create(entity *entity.User) (*entity.User, error) {
 func (usecase *UserUsecase) Find() ([]entity.User, error) {
 	return usecase.repository.Find()
 }
+
+func (usecase *UserUsecase) First(id string) (*entity.User, error) {
+	return usecase.repository.First(id)
+}
+
+func (usecase *UserUsecase) Delete(id string) error {
+	return usecase.repository.Delete(id)
+}

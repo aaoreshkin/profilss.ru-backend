@@ -22,3 +22,13 @@ func (repository *UserRepository) Find() ([]entity.User, error) {
 
 	return entity, repository.database.Find(&entity).Error
 }
+
+func (repository *UserRepository) First(id string) (*entity.User, error) {
+	entity := &entity.User{}
+
+	return entity, repository.database.Where("id = ?", id).First(&entity).Error
+}
+
+func (repository *UserRepository) Delete(id string) error {
+	return repository.database.Where("id = ?", id).Delete(&entity.User{}).Error
+}

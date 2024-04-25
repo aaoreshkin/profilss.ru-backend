@@ -1,19 +1,22 @@
 package internal
 
 import (
+	"github.com/oreshkindev/profilss.ru-backend/internal/bid"
 	"github.com/oreshkindev/profilss.ru-backend/internal/database"
 	"github.com/oreshkindev/profilss.ru-backend/internal/post"
 	"github.com/oreshkindev/profilss.ru-backend/internal/user"
 )
 
 type Manager struct {
-	User *user.Manager
+	Bid  *bid.Manager
 	Post *post.Manager
+	User *user.Manager
 }
 
 func NewManager(database *database.Database) *Manager {
 	return &Manager{
-		User: user.NewManager(database),
+		Bid:  bid.NewManager(database),
 		Post: post.NewManager(database),
+		User: user.NewManager(database),
 	}
 }
