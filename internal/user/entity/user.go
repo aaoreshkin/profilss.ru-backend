@@ -1,5 +1,7 @@
 package entity
 
+import "time"
+
 type (
 	User struct {
 		ID           string      `json:"id" gorm:"type:uuid;default:gen_random_uuid()"`
@@ -8,6 +10,7 @@ type (
 		Password     string      `json:"password,omitempty"`
 		Permission   *Permission `json:"permission,omitempty"`
 		PermissionID string      `json:"permission_id" gorm:"type:uuid;default:null"`
+		UpdatedAt    time.Time   `json:"updated_at" gorm:"default:now()"`
 	}
 
 	UserUsecase interface {
@@ -15,6 +18,7 @@ type (
 		Find() ([]User, error)
 		First(string) (*User, error)
 		Delete(string) error
+		Verify(*User) (*User, error)
 	}
 
 	UserRepository interface {
@@ -22,6 +26,7 @@ type (
 		Find() ([]User, error)
 		First(string) (*User, error)
 		Delete(string) error
+		Update(*User) (*User, error)
 	}
 )
 

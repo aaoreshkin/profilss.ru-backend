@@ -147,7 +147,7 @@ func (s *Seed) Permission() error {
 
 func (s *Seed) User() error {
 	const email = "oreshkin.dev@outlook.com"
-	const password = "password"
+	const password = "pAss1word*"
 
 	// Hash raw password
 	hashedPassword, err := common.HashPassword(password)

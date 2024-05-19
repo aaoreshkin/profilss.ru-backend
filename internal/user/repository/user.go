@@ -23,12 +23,16 @@ func (repository *UserRepository) Find() ([]entity.User, error) {
 	return entity, repository.database.Find(&entity).Error
 }
 
-func (repository *UserRepository) First(id string) (*entity.User, error) {
+func (repository *UserRepository) First(email string) (*entity.User, error) {
 	entity := &entity.User{}
 
-	return entity, repository.database.Where("id = ?", id).First(&entity).Error
+	return entity, repository.database.Where("email = ?", email).First(entity).Error
 }
 
 func (repository *UserRepository) Delete(id string) error {
 	return repository.database.Where("id = ?", id).Delete(&entity.User{}).Error
+}
+
+func (repository *UserRepository) Update(entity *entity.User) (*entity.User, error) {
+	return entity, repository.database.Updates(&entity).Error
 }

@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"fmt"
+
 	"github.com/oreshkindev/profilss.ru-backend/common"
 	"github.com/oreshkindev/profilss.ru-backend/internal/user/entity"
 )
@@ -50,10 +52,41 @@ func (usecase *UserUsecase) Find() ([]entity.User, error) {
 	return usecase.repository.Find()
 }
 
-func (usecase *UserUsecase) First(id string) (*entity.User, error) {
-	return usecase.repository.First(id)
+func (usecase *UserUsecase) First(email string) (*entity.User, error) {
+	return usecase.repository.First(email)
 }
 
 func (usecase *UserUsecase) Delete(id string) error {
 	return usecase.repository.Delete(id)
+}
+
+func (usecase *UserUsecase) Verify(entity *entity.User) (*entity.User, error) {
+
+	// Check is user exist
+	exist, err := usecase.repository.First(entity.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check is password equal to exist
+	equal := common.CheckPasswordHash(entity.Password, exist.Password)
+	if !equal {
+		return nil, fmt.Errorf("invalid password")
+	}
+
+	// Hash access token
+	hashedToken, err := common.HashToken(exist.Email, exist.PermissionID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Set access token
+	exist.AccessToken = hashedToken
+
+	result, err := usecase.repository.Update(exist)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }

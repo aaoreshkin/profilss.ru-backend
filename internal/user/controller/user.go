@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/oreshkindev/profilss.ru-backend/common"
 	"github.com/oreshkindev/profilss.ru-backend/internal/user/entity"
@@ -51,9 +52,9 @@ func (controller *UserController) Find(w http.ResponseWriter, r *http.Request) {
 
 func (controller *UserController) First(w http.ResponseWriter, r *http.Request) {
 	// get id from request
-	id := r.URL.Query().Get("id")
+	email := chi.URLParam(r, "email")
 
-	result, err := controller.usecase.First(id)
+	result, err := controller.usecase.First(email)
 	if err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
 		return
@@ -64,7 +65,7 @@ func (controller *UserController) First(w http.ResponseWriter, r *http.Request) 
 
 func (controller *UserController) Delete(w http.ResponseWriter, r *http.Request) {
 	// get id from request
-	id := r.URL.Query().Get("id")
+	id := chi.URLParam(r, "id")
 
 	err := controller.usecase.Delete(id)
 	if err != nil {
@@ -73,4 +74,21 @@ func (controller *UserController) Delete(w http.ResponseWriter, r *http.Request)
 	}
 
 	render.JSON(w, r, nil)
+}
+
+func (controller *UserController) Verify(w http.ResponseWriter, r *http.Request) {
+	entity := &entity.User{}
+
+	if err := render.DecodeJSON(r.Body, entity); err != nil {
+		render.Render(w, r, common.ErrInvalidRequest(err))
+		return
+	}
+
+	result, err := controller.usecase.Verify(entity)
+	if err != nil {
+		render.Render(w, r, common.ErrInvalidRequest(err))
+		return
+	}
+
+	render.JSON(w, r, result.NewResponse())
 }

@@ -7,6 +7,7 @@ type (
 		ID          uint64    `json:"id"`
 		CreatedAt   time.Time `json:"created_at" gorm:"default:now()"`
 		Description string    `json:"description"`
+		Image       string    `json:"image"`
 		Promo       bool      `json:"promo" gorm:"default:false"`
 		Published   bool      `json:"published" gorm:"default:false"`
 		Title       string    `json:"title"`
@@ -16,6 +17,7 @@ type (
 		Create(*Post) (*Post, error)
 		Find() ([]Post, error)
 		First(string) (*Post, error)
+		Update(*Post, string) (*Post, error)
 		Delete(string) error
 	}
 
@@ -23,6 +25,7 @@ type (
 		Create(*Post) (*Post, error)
 		Find() ([]Post, error)
 		First(string) (*Post, error)
+		Update(*Post, string) (*Post, error)
 		Delete(string) error
 	}
 )
@@ -33,6 +36,7 @@ func (response *Post) NewResponse() *Post {
 		ID:          response.ID,
 		CreatedAt:   response.CreatedAt,
 		Description: response.Description,
+		Image:       response.Image,
 		Promo:       response.Promo,
 		Published:   response.Published,
 		Title:       response.Title,

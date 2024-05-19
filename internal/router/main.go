@@ -44,8 +44,20 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 		r.Mount("/post", router.PostHandler())
 		r.Mount("/product", router.ProductHandler())
 		r.Mount("/user", router.UserHandler())
+		r.Mount("/doc", router.DocHandler())
 	})
 	return router, nil
+}
+
+func (router *Router) DocHandler() chi.Router {
+	r := chi.NewRouter()
+
+	controller := router.manager.Doc.DocController
+
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Post("/", controller.Create)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
 }
 
 func (router *Router) BidHandler() chi.Router {
@@ -69,6 +81,7 @@ func (router *Router) PostHandler() chi.Router {
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
 	r.Get("/", controller.Find)
 	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Put("/{id}", controller.Update)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
 
 	return r
@@ -123,8 +136,9 @@ func (router *Router) UserHandler() chi.Router {
 
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Get("/", controller.Find)
-	r.With(router.RBACMiddleware([]Rule{Superuser})).Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Get("/{email}", controller.First)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+	r.Post("/account", controller.Verify)
 
 	return r
 }
