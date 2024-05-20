@@ -38,36 +38,36 @@ func (s *Seed) Seed() error {
 func (s *Seed) Measure() error {
 	measure := []product.Measure{
 		{
-			Code:  "г",
-			Title: "Грамм",
+			Code: "г",
+			Name: "Грамм",
 		},
 		{
-			Code:  "кг",
-			Title: "Килограмм",
+			Code: "кг",
+			Name: "Килограмм",
 		},
 		{
-			Code:  "шт",
-			Title: "Штук",
+			Code: "шт",
+			Name: "Штук",
 		},
 		{
-			Code:  "тн",
-			Title: "Тонна",
+			Code: "тн",
+			Name: "Тонна",
 		},
 		{
-			Code:  "м3",
-			Title: "Метр кубический",
+			Code: "м3",
+			Name: "Метр кубический",
 		},
 		{
-			Code:  "м2",
-			Title: "Метр квадратный",
+			Code: "м2",
+			Name: "Метр квадратный",
 		},
 		{
-			Code:  "м",
-			Title: "Метр",
+			Code: "м",
+			Name: "Метр",
 		},
 		{
-			Code:  "см",
-			Title: "Сантиметр",
+			Code: "см",
+			Name: "Сантиметр",
 		},
 	}
 
@@ -77,51 +77,51 @@ func (s *Seed) Measure() error {
 func (s *Seed) Characteristic() error {
 	characteristic := []product.Characteristic{
 		{
-			Title:       "Вес",
+			Name:        "Вес",
 			Description: "Вес",
 		},
 		{
-			Title:       "Длина",
+			Name:        "Длина",
 			Description: "Длина",
 		},
 		{
-			Title:       "Ширина",
+			Name:        "Ширина",
 			Description: "Ширина",
 		},
 		{
-			Title:       "Высота",
+			Name:        "Высота",
 			Description: "Высота",
 		},
 		{
-			Title:       "Объем",
+			Name:        "Объем",
 			Description: "Объем",
 		},
 		{
-			Title:       "Площадь",
+			Name:        "Площадь",
 			Description: "Площадь",
 		},
 		{
-			Title:       "Толщина",
+			Name:        "Толщина",
 			Description: "Толщина",
 		},
 		{
-			Title:       "Диаметр",
+			Name:        "Диаметр",
 			Description: "Диаметр",
 		},
 		{
-			Title:       "Количество",
+			Name:        "Количество",
 			Description: "Количество",
 		},
 		{
-			Title:       "Размер",
+			Name:        "Размер",
 			Description: "Размер",
 		},
 		{
-			Title:       "Глубина",
+			Name:        "Глубина",
 			Description: "Глубина",
 		},
 		{
-			Title:       "Вместимость",
+			Name:        "Вместимость",
 			Description: "Вместимость",
 		},
 	}
@@ -157,7 +157,7 @@ func (s *Seed) User() error {
 
 	var permissionID string
 
-	// Get permissionID by title
+	// Get permissionID by name
 	if err := s.Model(&user.Permission{}).Select("id").Where("rule = ?", "Superuser").First(&permissionID).Error; err != nil {
 		return err
 	}

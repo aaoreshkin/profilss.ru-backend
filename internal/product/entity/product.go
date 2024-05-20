@@ -9,7 +9,7 @@ type (
 		CreatedAt       time.Time                 `json:"created_at" gorm:"default:now()"`
 		Description     string                    `json:"description"`
 		Published       bool                      `json:"published" gorm:"default:false"`
-		Title           string                    `json:"title"`
+		Name            string                    `json:"name"`
 	}
 
 	ProductsCharacteristics struct {

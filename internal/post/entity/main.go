@@ -7,10 +7,10 @@ type (
 		ID          uint64    `json:"id"`
 		CreatedAt   time.Time `json:"created_at" gorm:"default:now()"`
 		Description string    `json:"description"`
-		Image       string    `json:"image"`
+		File        string    `json:"file"`
 		Promo       bool      `json:"promo" gorm:"default:false"`
 		Published   bool      `json:"published" gorm:"default:false"`
-		Title       string    `json:"title"`
+		Name        string    `json:"name"`
 	}
 
 	PostUsecase interface {
@@ -36,9 +36,9 @@ func (response *Post) NewResponse() *Post {
 		ID:          response.ID,
 		CreatedAt:   response.CreatedAt,
 		Description: response.Description,
-		Image:       response.Image,
+		File:        response.File,
 		Promo:       response.Promo,
 		Published:   response.Published,
-		Title:       response.Title,
+		Name:        response.Name,
 	}
 }

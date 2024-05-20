@@ -2,9 +2,9 @@ package entity
 
 type (
 	Measure struct {
-		ID    uint64 `json:"id"`
-		Code  string `json:"code" gorm:"unique"`
-		Title string `json:"title"`
+		ID   uint64 `json:"id"`
+		Code string `json:"code" gorm:"unique"`
+		Name string `json:"name"`
 	}
 
 	MeasureUsecase interface {

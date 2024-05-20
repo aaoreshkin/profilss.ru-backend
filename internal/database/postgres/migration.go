@@ -4,6 +4,7 @@ import (
 	bid "github.com/oreshkindev/profilss.ru-backend/internal/bid/entity"
 	post "github.com/oreshkindev/profilss.ru-backend/internal/post/entity"
 	product "github.com/oreshkindev/profilss.ru-backend/internal/product/entity"
+	service "github.com/oreshkindev/profilss.ru-backend/internal/service/entity"
 	user "github.com/oreshkindev/profilss.ru-backend/internal/user/entity"
 )
 
@@ -12,6 +13,7 @@ func Migrate(database *Postgres) error {
 		&user.User{},
 		&user.Permission{},
 		&post.Post{},
+		&service.Service{},
 		&product.Measure{},
 		&product.Characteristic{},
 		&product.Product{},

@@ -42,6 +42,7 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 	router.Route("/v1", func(r chi.Router) {
 		r.Mount("/bid", router.BidHandler())
 		r.Mount("/post", router.PostHandler())
+		r.Mount("/service", router.ServiceHandler())
 		r.Mount("/product", router.ProductHandler())
 		r.Mount("/user", router.UserHandler())
 		r.Mount("/doc", router.DocHandler())
@@ -77,6 +78,20 @@ func (router *Router) PostHandler() chi.Router {
 	r := chi.NewRouter()
 
 	controller := router.manager.Post.PostController
+
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
+	r.Get("/", controller.Find)
+	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Put("/{id}", controller.Update)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
+}
+
+func (router *Router) ServiceHandler() chi.Router {
+	r := chi.NewRouter()
+
+	controller := router.manager.Service.ServiceController
 
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
 	r.Get("/", controller.Find)
