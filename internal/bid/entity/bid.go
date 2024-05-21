@@ -10,12 +10,14 @@ type (
 		Email       string    `json:"email,omitempty"`
 		Fullname    string    `json:"fullname,omitempty"`
 		Phone       string    `json:"phone,omitempty"`
+		Status      bool      `json:"status"`
 	}
 
 	BidUsecase interface {
 		Create(*Bid) (*Bid, error)
 		Find() ([]Bid, error)
 		First(string) (*Bid, error)
+		Update(*Bid, string) (*Bid, error)
 		Delete(string) error
 	}
 
@@ -23,6 +25,7 @@ type (
 		Create(*Bid) (*Bid, error)
 		Find() ([]Bid, error)
 		First(string) (*Bid, error)
+		Update(*Bid, string) (*Bid, error)
 		Delete(string) error
 	}
 )
@@ -32,6 +35,10 @@ func (response *Bid) NewResponse() *Bid {
 	return &Bid{
 		ID:          response.ID,
 		CreatedAt:   response.CreatedAt,
+		Email:       response.Email,
+		Fullname:    response.Fullname,
+		Phone:       response.Phone,
 		Description: response.Description,
+		Status:      response.Status,
 	}
 }

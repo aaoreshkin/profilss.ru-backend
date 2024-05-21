@@ -16,13 +16,11 @@ func NewProductRepository(database *database.Database) *ProductRepository {
 }
 
 func (repository *ProductRepository) Create(entity *entity.Product) (*entity.Product, error) {
-	return entity, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Create(&entity).Error
+	return entity, repository.database.Create(&entity).Error
 }
 
 func (repository *ProductRepository) Find() ([]entity.Product, error) {
 	entity := []entity.Product{}
-
-	println("Im here")
 
 	return entity, repository.database.Debug().Preload(clause.Associations).Preload("Characteristics." + clause.Associations).Find(&entity).Error
 }
@@ -31,6 +29,10 @@ func (repository *ProductRepository) First(id string) (*entity.Product, error) {
 	entity := &entity.Product{}
 
 	return entity, repository.database.Where("id = ?", id).Preload(clause.Associations).Preload("Characteristics." + clause.Associations).First(&entity).Error
+}
+
+func (repository *ProductRepository) Update(entity *entity.Product, id string) (*entity.Product, error) {
+	return entity, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Model(&entity).Where("id = ?", id).Updates(&entity).Error
 }
 
 func (repository *ProductRepository) Delete(id string) error {

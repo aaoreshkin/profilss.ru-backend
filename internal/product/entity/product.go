@@ -6,10 +6,13 @@ type (
 	Product struct {
 		ID              uint64                    `json:"id"`
 		Characteristics []ProductsCharacteristics `json:"characteristics" gorm:"foreignKey:ProductID;constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
+		Category        Category                  `json:"category" gorm:"foreignKey:CategoryID;constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
+		CategoryID      uint64                    `json:"-"`
 		CreatedAt       time.Time                 `json:"created_at" gorm:"default:now()"`
 		Description     string                    `json:"description"`
 		Published       bool                      `json:"published" gorm:"default:false"`
 		Name            string                    `json:"name"`
+		File            string                    `json:"file"`
 	}
 
 	ProductsCharacteristics struct {
@@ -26,6 +29,7 @@ type (
 		Create(*Product) (*Product, error)
 		Find() ([]Product, error)
 		First(string) (*Product, error)
+		Update(*Product, string) (*Product, error)
 		Delete(string) error
 	}
 
@@ -33,6 +37,7 @@ type (
 		Create(*Product) (*Product, error)
 		Find() ([]Product, error)
 		First(string) (*Product, error)
+		Update(*Product, string) (*Product, error)
 		Delete(string) error
 	}
 )

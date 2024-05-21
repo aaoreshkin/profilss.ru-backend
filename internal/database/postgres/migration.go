@@ -16,6 +16,7 @@ func Migrate(database *Postgres) error {
 		&service.Service{},
 		&product.Measure{},
 		&product.Characteristic{},
+		&product.Category{},
 		&product.Product{},
 		&product.ProductsCharacteristics{},
 		&bid.Bid{},

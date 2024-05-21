@@ -26,6 +26,10 @@ func (usecase *BidUsecase) First(id string) (*entity.Bid, error) {
 	return usecase.repository.First(id)
 }
 
+func (usecase *BidUsecase) Update(entity *entity.Bid, id string) (*entity.Bid, error) {
+	return usecase.repository.Update(entity, id)
+}
+
 func (usecase *BidUsecase) Delete(id string) error {
 	return usecase.repository.Delete(id)
 }

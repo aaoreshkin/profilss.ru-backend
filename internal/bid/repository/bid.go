@@ -29,6 +29,10 @@ func (repository *BidRepository) First(id string) (*entity.Bid, error) {
 	return entity, repository.database.Where("id = ?", id).First(&entity).Error
 }
 
+func (repository *BidRepository) Update(entity *entity.Bid, id string) (*entity.Bid, error) {
+	return entity, repository.database.Save(&entity).Error
+}
+
 func (repository *BidRepository) Delete(id string) error {
 	return repository.database.Where("id = ?", id).Delete(&entity.Bid{}).Error
 }

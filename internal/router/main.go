@@ -69,6 +69,7 @@ func (router *Router) BidHandler() chi.Router {
 	r.Post("/", controller.Create)
 	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", controller.Find)
 	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Put("/{id}", controller.Update)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
 
 	return r
@@ -110,9 +111,11 @@ func (router *Router) ProductHandler() chi.Router {
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
 	r.Get("/", controller.Find)
 	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Put("/{id}", controller.Update)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
 
 	r.Mount("/characteristic", router.CharacteristicHandler())
+	r.Mount("/category", router.CategoryHandler())
 	r.Mount("/measure", router.MeasureHandler())
 
 	return r
@@ -122,6 +125,19 @@ func (router *Router) CharacteristicHandler() chi.Router {
 	r := chi.NewRouter()
 
 	controller := router.manager.Product.CharacteristicController
+
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
+	r.Get("/", controller.Find)
+	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
+}
+
+func (router *Router) CategoryHandler() chi.Router {
+	r := chi.NewRouter()
+
+	controller := router.manager.Product.CategoryController
 
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
 	r.Get("/", controller.Find)
@@ -171,7 +187,7 @@ func (router *Router) RBACMiddleware(requiredRule []Rule) func(http.Handler) htt
 			// Parse the token string into a jwt.Token struct
 			parsedToken, err := common.ParseToken(tokenString)
 			if err != nil {
-				render.Render(w, r, common.ErrInvalidRequest(err))
+				render.Render(w, r, common.ErrUnauthorized(fmt.Errorf("Token is invalid or expired: %s", err.Error())))
 				return
 			}
 

@@ -63,6 +63,26 @@ func (controller *BidController) First(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, result.NewResponse())
 }
 
+func (controller *BidController) Update(w http.ResponseWriter, r *http.Request) {
+	// get id from request
+	id := chi.URLParam(r, "id")
+
+	entity := &entity.Bid{}
+
+	if err := render.DecodeJSON(r.Body, entity); err != nil {
+		render.Render(w, r, common.ErrInvalidRequest(err))
+		return
+	}
+
+	result, err := controller.usecase.Update(entity, id)
+	if err != nil {
+		render.Render(w, r, common.ErrInvalidRequest(err))
+		return
+	}
+
+	render.JSON(w, r, result.NewResponse())
+}
+
 func (controller *BidController) Delete(w http.ResponseWriter, r *http.Request) {
 	// get id from request
 	id := chi.URLParam(r, "id")

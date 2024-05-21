@@ -24,6 +24,10 @@ func (s *Seed) Seed() error {
 		return err
 	}
 
+	if err := s.Category(); err != nil {
+		return err
+	}
+
 	if err := s.Permission(); err != nil {
 		return err
 	}
@@ -129,6 +133,33 @@ func (s *Seed) Characteristic() error {
 	return s.Create(&characteristic).Error
 }
 
+func (s *Seed) Category() error {
+	characteristic := []product.Category{
+		{
+			Name:        "Труба плоскоовальная",
+			Description: "-",
+		},
+		{
+			Name:        "Труба квадратная",
+			Description: "-",
+		},
+		{
+			Name:        "Труба круглая",
+			Description: "-",
+		},
+		{
+			Name:        "Труба овальная",
+			Description: "-",
+		},
+		{
+			Name:        "Труба прямоугольная",
+			Description: "-",
+		},
+	}
+
+	return s.Create(&characteristic).Error
+}
+
 func (s *Seed) Permission() error {
 	roles := []user.Permission{
 		{
@@ -146,13 +177,15 @@ func (s *Seed) Permission() error {
 }
 
 func (s *Seed) User() error {
-	const email = "oreshkin.dev@outlook.com"
-	const password = "pAss1word*"
-
-	// Hash raw password
-	hashedPassword, err := common.HashPassword(password)
-	if err != nil {
-		return err
+	users := []user.User{
+		{
+			Email:    "oreshkin.dev@outlook.com",
+			Password: "pAss1word*",
+		},
+		{
+			Email:    "ioreshkin@outlook.com",
+			Password: "pAss1word*",
+		},
 	}
 
 	var permissionID string
@@ -162,18 +195,28 @@ func (s *Seed) User() error {
 		return err
 	}
 
-	// Hash access token
-	accessToken, err := common.HashToken(email, permissionID)
-	if err != nil {
-		return err
+	for _, user := range users {
+
+		// Hash raw password
+		hashedPassword, err := common.HashPassword(user.Password)
+		if err != nil {
+			return err
+		}
+
+		// Hash access token
+		accessToken, err := common.HashToken(user.Email, permissionID)
+		if err != nil {
+			return err
+		}
+
+		user.AccessToken = accessToken
+		user.Password = hashedPassword
+		user.PermissionID = permissionID
+
+		if err := s.Create(&user).Error; err != nil {
+			return err
+		}
 	}
 
-	user := user.User{
-		AccessToken:  accessToken,
-		Email:        email,
-		Password:     hashedPassword,
-		PermissionID: permissionID,
-	}
-
-	return s.Create(&user).Error
+	return nil
 }
