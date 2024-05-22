@@ -43,9 +43,9 @@ func (controller *UserController) Find(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for i := range result {
-		result[i] = *result[i].NewResponse()
-	}
+	// for i := range result {
+	// 	result[i] = *result[i].NewResponse()
+	// }
 
 	render.JSON(w, r, result)
 }
@@ -74,6 +74,26 @@ func (controller *UserController) Delete(w http.ResponseWriter, r *http.Request)
 	}
 
 	render.JSON(w, r, nil)
+}
+
+func (controller *UserController) Update(w http.ResponseWriter, r *http.Request) {
+	// get id from request
+	id := chi.URLParam(r, "id")
+
+	entity := &entity.User{}
+
+	if err := render.DecodeJSON(r.Body, entity); err != nil {
+		render.Render(w, r, common.ErrInvalidRequest(err))
+		return
+	}
+
+	result, err := controller.usecase.Update(entity, id)
+	if err != nil {
+		render.Render(w, r, common.ErrInvalidRequest(err))
+		return
+	}
+
+	render.JSON(w, r, result.NewResponse())
 }
 
 func (controller *UserController) Verify(w http.ResponseWriter, r *http.Request) {

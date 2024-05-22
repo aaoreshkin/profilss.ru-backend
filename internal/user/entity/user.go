@@ -10,6 +10,8 @@ type (
 		Password     string      `json:"password,omitempty"`
 		Permission   *Permission `json:"permission,omitempty"`
 		PermissionID string      `json:"permission_id" gorm:"type:uuid;default:null"`
+		Fullname     string      `json:"fullname,omitempty"`
+		Phone        string      `json:"phone,omitempty"`
 		UpdatedAt    time.Time   `json:"updated_at" gorm:"default:now()"`
 	}
 
@@ -17,6 +19,7 @@ type (
 		Create(*User) (*User, error)
 		Find() ([]User, error)
 		First(string) (*User, error)
+		Update(*User, string) (*User, error)
 		Delete(string) error
 		Verify(*User) (*User, error)
 	}
@@ -26,7 +29,8 @@ type (
 		Find() ([]User, error)
 		First(string) (*User, error)
 		Delete(string) error
-		Update(*User) (*User, error)
+		Update(*User, string) (*User, error)
+		FindManager() (*string, error)
 	}
 )
 
@@ -36,6 +40,9 @@ func (response *User) NewResponse() *User {
 		ID:           response.ID,
 		AccessToken:  response.AccessToken,
 		Email:        response.Email,
+		Fullname:     response.Fullname,
+		Phone:        response.Phone,
 		PermissionID: response.PermissionID,
+		UpdatedAt:    response.UpdatedAt,
 	}
 }

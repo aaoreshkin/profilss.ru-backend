@@ -31,6 +31,14 @@ func (usecase *UserUsecase) Create(entity *entity.User) (*entity.User, error) {
 	// Set hashed password
 	entity.Password = hashedPassword
 
+	permissionID, err := usecase.repository.FindManager()
+	if err != nil {
+		return nil, err
+	}
+
+	// Set permission Manager for all users created by admin
+	entity.PermissionID = *permissionID
+
 	// Hash access token
 	hashedToken, err := common.HashToken(entity.Email, entity.PermissionID)
 	if err != nil {
@@ -60,6 +68,22 @@ func (usecase *UserUsecase) Delete(id string) error {
 	return usecase.repository.Delete(id)
 }
 
+func (usecase *UserUsecase) Update(entity *entity.User, id string) (*entity.User, error) {
+
+	if entity.Password != "" {
+		// Hash entity raw password
+		hashedPassword, err := common.HashPassword(entity.Password)
+		if err != nil {
+			return nil, err
+		}
+
+		// Set hashed password
+		entity.Password = hashedPassword
+	}
+
+	return usecase.repository.Update(entity, id)
+}
+
 func (usecase *UserUsecase) Verify(entity *entity.User) (*entity.User, error) {
 
 	// Check is user exist
@@ -83,7 +107,7 @@ func (usecase *UserUsecase) Verify(entity *entity.User) (*entity.User, error) {
 	// Set access token
 	exist.AccessToken = hashedToken
 
-	result, err := usecase.repository.Update(exist)
+	result, err := usecase.repository.Update(exist, exist.ID)
 	if err != nil {
 		return nil, err
 	}

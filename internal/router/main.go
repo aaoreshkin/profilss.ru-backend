@@ -3,6 +3,7 @@ package router
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -183,6 +184,7 @@ func (router *Router) UserHandler() chi.Router {
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Get("/", controller.Find)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Get("/{email}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Put("/{id}", controller.Update)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
 	r.Post("/account", controller.Verify)
 
@@ -195,6 +197,10 @@ func (router *Router) RBACMiddleware(requiredRule []Rule) func(http.Handler) htt
 			tokenString := r.Header.Get("Authorization")
 			if tokenString == "" {
 				render.Render(w, r, common.ErrInvalidRequest(fmt.Errorf("empty token")))
+				return
+			}
+			if !strings.HasPrefix(tokenString, "Bearer ") {
+				render.Render(w, r, common.ErrInvalidRequest(fmt.Errorf("missing or invalid token prefix: %s", tokenString)))
 				return
 			}
 			tokenString = tokenString[len("Bearer "):]

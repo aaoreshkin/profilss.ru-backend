@@ -33,6 +33,17 @@ func (repository *UserRepository) Delete(id string) error {
 	return repository.database.Where("id = ?", id).Delete(&entity.User{}).Error
 }
 
-func (repository *UserRepository) Update(entity *entity.User) (*entity.User, error) {
-	return entity, repository.database.Updates(&entity).Error
+func (repository *UserRepository) Update(entity *entity.User, id string) (*entity.User, error) {
+	return entity, repository.database.Where("id = ?", id).Updates(&entity).Error
+}
+
+func (repository *UserRepository) FindManager() (*string, error) {
+	var permissionID string
+
+	// Get permissionID by name
+	if err := repository.database.Model(&entity.Permission{}).Select("id").Where("rule = ?", "Manager").First(&permissionID).Error; err != nil {
+		return nil, err
+	}
+
+	return &permissionID, nil
 }
