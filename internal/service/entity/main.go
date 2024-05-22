@@ -8,6 +8,7 @@ type (
 		Name        string    `json:"name"`
 		Description string    `json:"description"`
 		Content     string    `json:"content"`
+		Quote       string    `json:"quote"`
 		File        string    `json:"file"`
 		CreatedAt   time.Time `json:"created_at" gorm:"default:now()"`
 		Published   bool      `json:"published" gorm:"default:false"`
@@ -37,6 +38,7 @@ func (response *Service) NewResponse() *Service {
 		Name:        response.Name,
 		Description: response.Description,
 		Content:     response.Content,
+		Quote:       response.Quote,
 		File:        response.File,
 		CreatedAt:   response.CreatedAt,
 		Published:   response.Published,
