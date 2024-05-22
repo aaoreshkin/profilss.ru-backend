@@ -10,7 +10,7 @@ type (
 		Email       string    `json:"email,omitempty"`
 		Fullname    string    `json:"fullname,omitempty"`
 		Phone       string    `json:"phone,omitempty"`
-		Status      bool      `json:"status"`
+		Status      bool      `json:"status" gorm:"default:false"`
 	}
 
 	BidUsecase interface {

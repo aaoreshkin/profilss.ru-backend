@@ -2,6 +2,7 @@ package postgres
 
 import (
 	bid "github.com/oreshkindev/profilss.ru-backend/internal/bid/entity"
+	hr "github.com/oreshkindev/profilss.ru-backend/internal/hr/entity"
 	post "github.com/oreshkindev/profilss.ru-backend/internal/post/entity"
 	product "github.com/oreshkindev/profilss.ru-backend/internal/product/entity"
 	service "github.com/oreshkindev/profilss.ru-backend/internal/service/entity"
@@ -20,6 +21,7 @@ func Migrate(database *Postgres) error {
 		&product.Product{},
 		&product.ProductsCharacteristics{},
 		&bid.Bid{},
+		&hr.Hr{},
 	}
 
 	// Use it for development only

@@ -4,6 +4,7 @@ import (
 	"github.com/oreshkindev/profilss.ru-backend/internal/bid"
 	"github.com/oreshkindev/profilss.ru-backend/internal/database"
 	"github.com/oreshkindev/profilss.ru-backend/internal/doc"
+	"github.com/oreshkindev/profilss.ru-backend/internal/hr"
 	"github.com/oreshkindev/profilss.ru-backend/internal/post"
 	"github.com/oreshkindev/profilss.ru-backend/internal/product"
 	"github.com/oreshkindev/profilss.ru-backend/internal/service"
@@ -17,6 +18,7 @@ type Manager struct {
 	Service *service.Manager
 	User    *user.Manager
 	Product *product.Manager
+	Hr      *hr.Manager
 }
 
 func NewManager(database *database.Database) *Manager {
@@ -27,5 +29,6 @@ func NewManager(database *database.Database) *Manager {
 		Service: service.NewManager(database),
 		User:    user.NewManager(database),
 		Product: product.NewManager(database),
+		Hr:      hr.NewManager(database),
 	}
 }

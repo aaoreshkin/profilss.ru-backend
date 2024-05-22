@@ -46,6 +46,7 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 		r.Mount("/product", router.ProductHandler())
 		r.Mount("/user", router.UserHandler())
 		r.Mount("/doc", router.DocHandler())
+		r.Mount("/hr", router.HrHandler())
 	})
 	return router, nil
 }
@@ -65,6 +66,20 @@ func (router *Router) BidHandler() chi.Router {
 	r := chi.NewRouter()
 
 	controller := router.manager.Bid.BidController
+
+	r.Post("/", controller.Create)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", controller.Find)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Put("/{id}", controller.Update)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
+}
+
+func (router *Router) HrHandler() chi.Router {
+	r := chi.NewRouter()
+
+	controller := router.manager.Hr.HrController
 
 	r.Post("/", controller.Create)
 	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", controller.Find)

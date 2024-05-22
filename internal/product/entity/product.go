@@ -13,6 +13,9 @@ type (
 		Published       bool                      `json:"published" gorm:"default:false"`
 		Name            string                    `json:"name"`
 		File            string                    `json:"file"`
+		Typesize        string                    `json:"typesize"`
+		Content         string                    `json:"content"`
+		Adv             string                    `json:"adv"`
 	}
 
 	ProductsCharacteristics struct {
