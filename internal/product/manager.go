@@ -12,9 +12,9 @@ type Manager struct {
 	ProductUsecase    usecase.ProductUsecase
 	ProductController controller.ProductController
 
-	MeasureRepository repository.MeasureRepository
-	MeasureUsecase    usecase.MeasureUsecase
-	MeasureController controller.MeasureController
+	IsoRepository repository.IsoRepository
+	IsoUsecase    usecase.IsoUsecase
+	IsoController controller.IsoController
 
 	CharacteristicRepository repository.CharacteristicRepository
 	CharacteristicUsecase    usecase.CharacteristicUsecase
@@ -30,9 +30,9 @@ func NewManager(database *database.Database) *Manager {
 	productUsecase := usecase.NewProductUsecase(productRepository)
 	productController := controller.NewProductController(productUsecase)
 
-	measureRepository := repository.NewMeasureRepository(database)
-	measureUsecase := usecase.NewMeasureUsecase(measureRepository)
-	measureController := controller.NewMeasureController(measureUsecase)
+	isoRepository := repository.NewIsoRepository(database)
+	isoUsecase := usecase.NewIsoUsecase(isoRepository)
+	isoController := controller.NewIsoController(isoUsecase)
 
 	characteristicRepository := repository.NewCharacteristicRepository(database)
 	characteristicUsecase := usecase.NewCharacteristicUsecase(characteristicRepository)
@@ -47,9 +47,9 @@ func NewManager(database *database.Database) *Manager {
 		ProductUsecase:    *productUsecase,
 		ProductController: *productController,
 
-		MeasureRepository: *measureRepository,
-		MeasureUsecase:    *measureUsecase,
-		MeasureController: *measureController,
+		IsoRepository: *isoRepository,
+		IsoUsecase:    *isoUsecase,
+		IsoController: *isoController,
 
 		CharacteristicRepository: *characteristicRepository,
 		CharacteristicUsecase:    *characteristicUsecase,

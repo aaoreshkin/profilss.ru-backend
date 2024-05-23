@@ -22,17 +22,22 @@ func (repository *ProductRepository) Create(entity *entity.Product) (*entity.Pro
 func (repository *ProductRepository) Find() ([]entity.Product, error) {
 	entity := []entity.Product{}
 
-	return entity, repository.database.Debug().Preload(clause.Associations).Preload("Characteristics." + clause.Associations).Find(&entity).Error
+	return entity, repository.database.Debug().Preload(clause.Associations).Preload("Isos." + clause.Associations).Find(&entity).Error
 }
 
 func (repository *ProductRepository) First(id string) (*entity.Product, error) {
 	entity := &entity.Product{}
 
-	return entity, repository.database.Where("id = ?", id).Preload(clause.Associations).Preload("Characteristics." + clause.Associations).First(&entity).Error
+	return entity, repository.database.Where("id = ?", id).Preload(clause.Associations).Preload("Isos." + clause.Associations).First(&entity).Error
 }
 
-func (repository *ProductRepository) Update(entity *entity.Product, id string) (*entity.Product, error) {
-	return entity, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Model(&entity).Where("id = ?", id).Updates(&entity).Error
+func (repository *ProductRepository) Update(tmp *entity.Product, id string) (*entity.Product, error) {
+
+	if r := repository.database.Model(&entity.Product{ID: tmp.ID}).Association("Isos").Clear(); r != nil {
+		return nil, r
+	}
+
+	return tmp, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Model(&tmp).Where("id = ?", id).Updates(&tmp).Error
 }
 
 func (repository *ProductRepository) Delete(id string) error {

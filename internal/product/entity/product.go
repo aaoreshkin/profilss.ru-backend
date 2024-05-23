@@ -4,28 +4,14 @@ import "time"
 
 type (
 	Product struct {
-		ID              uint64                    `json:"id"`
-		Characteristics []ProductsCharacteristics `json:"characteristics" gorm:"foreignKey:ProductID;constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
-		Category        Category                  `json:"category" gorm:"foreignKey:CategoryID;constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
-		CategoryID      uint64                    `json:"-"`
-		CreatedAt       time.Time                 `json:"created_at" gorm:"default:now()"`
-		Description     string                    `json:"description"`
-		Published       bool                      `json:"published" gorm:"default:false"`
-		Name            string                    `json:"name"`
-		File            string                    `json:"file"`
-		Typesize        string                    `json:"typesize"`
-		Content         string                    `json:"content"`
-		Adv             string                    `json:"adv"`
-	}
-
-	ProductsCharacteristics struct {
 		ID               uint64         `json:"id"`
+		Category         Category       `json:"category" gorm:"foreignKey:CategoryID;constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
+		CategoryID       uint64         `json:"-"`
+		Isos             []Iso          `json:"isos" gorm:"many2many:products_isos;constraint:OnDelete:CASCADE;"`
 		Characteristic   Characteristic `json:"characteristic" gorm:"foreignKey:CharacteristicID;constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
 		CharacteristicID uint64         `json:"-"`
-		Measure          Measure        `json:"measure" gorm:"foreignKey:MeasureID;constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
-		MeasureID        uint64         `json:"-"`
-		ProductID        uint64         `json:"-"`
-		Value            string         `json:"value"`
+		CreatedAt        time.Time      `json:"created_at" gorm:"default:now()"`
+		Published        bool           `json:"published" gorm:"default:false"`
 	}
 
 	ProductUsecase interface {

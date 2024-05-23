@@ -9,18 +9,18 @@ import (
 	"github.com/oreshkindev/profilss.ru-backend/internal/product/entity"
 )
 
-type MeasureController struct {
-	usecase entity.MeasureUsecase
+type IsoController struct {
+	usecase entity.IsoUsecase
 }
 
-func NewMeasureController(usecase entity.MeasureUsecase) *MeasureController {
-	return &MeasureController{
+func NewIsoController(usecase entity.IsoUsecase) *IsoController {
+	return &IsoController{
 		usecase: usecase,
 	}
 }
 
-func (controller *MeasureController) Create(w http.ResponseWriter, r *http.Request) {
-	entity := &entity.Measure{}
+func (controller *IsoController) Create(w http.ResponseWriter, r *http.Request) {
+	entity := &entity.Iso{}
 
 	if err := render.DecodeJSON(r.Body, entity); err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
@@ -36,7 +36,7 @@ func (controller *MeasureController) Create(w http.ResponseWriter, r *http.Reque
 	render.JSON(w, r, result)
 }
 
-func (controller *MeasureController) Find(w http.ResponseWriter, r *http.Request) {
+func (controller *IsoController) Find(w http.ResponseWriter, r *http.Request) {
 	result, err := controller.usecase.Find()
 	if err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
@@ -46,7 +46,7 @@ func (controller *MeasureController) Find(w http.ResponseWriter, r *http.Request
 	render.JSON(w, r, result)
 }
 
-func (controller *MeasureController) First(w http.ResponseWriter, r *http.Request) {
+func (controller *IsoController) First(w http.ResponseWriter, r *http.Request) {
 	// get id from request
 	id := chi.URLParam(r, "id")
 
@@ -59,7 +59,7 @@ func (controller *MeasureController) First(w http.ResponseWriter, r *http.Reques
 	render.JSON(w, r, result)
 }
 
-func (controller *MeasureController) Delete(w http.ResponseWriter, r *http.Request) {
+func (controller *IsoController) Delete(w http.ResponseWriter, r *http.Request) {
 	// get id from request
 	id := chi.URLParam(r, "id")
 

@@ -82,9 +82,9 @@ func (router *Router) HrHandler() chi.Router {
 
 	controller := router.manager.Hr.HrController
 
-	r.Post("/", controller.Create)
-	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", controller.Find)
-	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Post("/", controller.Create)
+	r.Get("/", controller.Find)
+	r.Get("/{id}", controller.First)
 	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Put("/{id}", controller.Update)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
 
@@ -132,7 +132,7 @@ func (router *Router) ProductHandler() chi.Router {
 
 	r.Mount("/characteristic", router.CharacteristicHandler())
 	r.Mount("/category", router.CategoryHandler())
-	r.Mount("/measure", router.MeasureHandler())
+	r.Mount("/iso", router.IsoHandler())
 
 	return r
 }
@@ -163,10 +163,10 @@ func (router *Router) CategoryHandler() chi.Router {
 	return r
 }
 
-func (router *Router) MeasureHandler() chi.Router {
+func (router *Router) IsoHandler() chi.Router {
 	r := chi.NewRouter()
 
-	controller := router.manager.Product.MeasureController
+	controller := router.manager.Product.IsoController
 
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
 	r.Get("/", controller.Find)

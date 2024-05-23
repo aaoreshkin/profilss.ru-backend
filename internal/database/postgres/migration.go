@@ -15,11 +15,10 @@ func Migrate(database *Postgres) error {
 		&user.Permission{},
 		&post.Post{},
 		&service.Service{},
-		&product.Measure{},
+		&product.Iso{},
 		&product.Characteristic{},
 		&product.Category{},
 		&product.Product{},
-		&product.ProductsCharacteristics{},
 		&bid.Bid{},
 		&hr.Hr{},
 	}

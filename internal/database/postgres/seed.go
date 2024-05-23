@@ -16,11 +16,8 @@ func NewSeed(database *Postgres) (*Seed, error) {
 }
 
 func (s *Seed) Seed() error {
-	if err := s.Measure(); err != nil {
-		return err
-	}
 
-	if err := s.Characteristic(); err != nil {
+	if err := s.Iso(); err != nil {
 		return err
 	}
 
@@ -39,120 +36,110 @@ func (s *Seed) Seed() error {
 	return nil
 }
 
-func (s *Seed) Measure() error {
-	measure := []product.Measure{
+func (s *Seed) Iso() error {
+	entries := []product.Iso{
 		{
-			Code: "г",
-			Name: "Грамм",
+			Name: "ГОСТ 3262-75",
 		},
 		{
-			Code: "кг",
-			Name: "Килограмм",
+			Name: "ГОСТ 10704-91",
 		},
 		{
-			Code: "шт",
-			Name: "Штук",
+			Name: "ГОСТ 10705-80",
 		},
 		{
-			Code: "тн",
-			Name: "Тонна",
+			Name: "ГОСТ 8639-82",
 		},
 		{
-			Code: "м3",
-			Name: "Метр кубический",
+			Name: "ГОСТ 8645-68",
 		},
 		{
-			Code: "м2",
-			Name: "Метр квадратный",
+			Name: "ГОСТ 10707-80",
 		},
 		{
-			Code: "м",
-			Name: "Метр",
+			Name: "ГОСТ 8644-68 (тип А и тип В)",
 		},
 		{
-			Code: "см",
-			Name: "Сантиметр",
-		},
-	}
-
-	return s.Create(&measure).Error
-}
-
-func (s *Seed) Characteristic() error {
-	characteristic := []product.Characteristic{
-		{
-			Name:        "Вес",
-			Description: "Вес",
+			Name: "ГОСТ 8642-68",
 		},
 		{
-			Name:        "Длина",
-			Description: "Длина",
+			Name: "ГОСТ 34028-16",
 		},
 		{
-			Name:        "Ширина",
-			Description: "Ширина",
+			Name: "ГОСТ 2590-2006",
 		},
 		{
-			Name:        "Высота",
-			Description: "Высота",
+			Name: "ГОСТ 30136-95",
 		},
 		{
-			Name:        "Объем",
-			Description: "Объем",
+			Name: "ГОСТ 8509-93",
 		},
 		{
-			Name:        "Площадь",
-			Description: "Площадь",
+			Name: "ГОСТ 103-2006 МТ",
 		},
 		{
-			Name:        "Толщина",
-			Description: "Толщина",
+			Name: "ГОСТ 2591-2006",
 		},
 		{
-			Name:        "Диаметр",
-			Description: "Диаметр",
-		},
-		{
-			Name:        "Количество",
-			Description: "Количество",
-		},
-		{
-			Name:        "Размер",
-			Description: "Размер",
-		},
-		{
-			Name:        "Глубина",
-			Description: "Глубина",
-		},
-		{
-			Name:        "Вместимость",
-			Description: "Вместимость",
+			Name: "ГОСТ 16523-97",
 		},
 	}
 
-	return s.Create(&characteristic).Error
+	return s.Create(&entries).Error
 }
 
 func (s *Seed) Category() error {
 	characteristic := []product.Category{
 		{
-			Name:        "Труба плоскоовальная",
+			Name:        "Трубы стальные эл/сварные прямошовные",
 			Description: "-",
 		},
 		{
-			Name:        "Труба квадратная",
+			Name:        "Трубы стальные квадратные эл/сварные прямошовные",
 			Description: "-",
 		},
 		{
-			Name:        "Труба круглая",
+			Name:        "Трубы стальные круглые эл/сварные прямошовные",
 			Description: "-",
 		},
 		{
-			Name:        "Труба овальная",
+			Name:        "Трубы стальные прямоугольные эл/сварные прямошовные",
 			Description: "-",
 		},
 		{
-			Name:        "Труба прямоугольная",
+			Name:        "Трубы стальные плоскоовальные эл/сварные прямошовные",
+			Description: "-",
+		},
+		{
+			Name:        "Трубы стальные овальные эл/сварные прямошовные",
+			Description: "-",
+		},
+		{
+			Name:        "Трубы стальные арочные эл/сварные прямошовные",
+			Description: "-",
+		},
+		{
+			Name:        "Арматура A III",
+			Description: "-",
+		},
+		{
+			Name:        "Арматура A I круг",
+			Description: "-",
+		},
+		{
+			Name:        "Уголок",
+			Description: "-",
+		},
+		{
+			Name:        "Полоса",
+			Description: "-",
+		},
+		{
+			Name:        "Квадрат",
+			Description: "-",
+		},
+		{
+			Name:        "Лист г/к",
 			Description: "-",
 		},
 	}
