@@ -91,56 +91,107 @@ func (s *Seed) Iso() error {
 func (s *Seed) Category() error {
 	characteristic := []product.Category{
 		{
-			Name:        "Трубы стальные эл/сварные прямошовные",
-			Description: "-",
+			Name: "Трубы стальные эл/сварные прямошовные",
+			File: product.File{
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Трубы стальные квадратные эл/сварные прямошовные",
-			Description: "-",
+			Name: "Трубы стальные квадратные эл/сварные прямошовные",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Трубы стальные круглые эл/сварные прямошовные",
-			Description: "-",
+			Name: "Трубы стальные круглые эл/сварные прямошовные",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Трубы стальные прямоугольные эл/сварные прямошовные",
-			Description: "-",
+			Name: "Трубы стальные прямоугольные эл/сварные прямошовные",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Трубы стальные плоскоовальные эл/сварные прямошовные",
-			Description: "-",
+			Name: "Трубы стальные плоскоовальные эл/сварные прямошовные",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Трубы стальные овальные эл/сварные прямошовные",
-			Description: "-",
+			Name: "Трубы стальные овальные эл/сварные прямошовные",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Трубы стальные арочные эл/сварные прямошовные",
-			Description: "-",
+			Name: "Трубы стальные арочные эл/сварные прямошовные",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Арматура A III",
-			Description: "-",
+			Name: "Арматура A III",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Арматура A I круг",
-			Description: "-",
+			Name: "Арматура A I круг",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Уголок",
-			Description: "-",
+			Name: "Уголок",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Полоса",
-			Description: "-",
+			Name: "Полоса",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Квадрат",
-			Description: "-",
+			Name: "Квадрат",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 		{
-			Name:        "Лист г/к",
-			Description: "-",
+			Name: "Лист г/к",
+			File: product.File{
+				ID:      1,
+				Preview: "preview.png",
+				Video:   "video.mp4",
+			},
 		},
 	}
 

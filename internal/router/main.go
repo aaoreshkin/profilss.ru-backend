@@ -158,6 +158,7 @@ func (router *Router) CategoryHandler() chi.Router {
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
 	r.Get("/", controller.Find)
 	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Put("/{id}", controller.Update)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
 
 	return r
@@ -171,6 +172,7 @@ func (router *Router) IsoHandler() chi.Router {
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
 	r.Get("/", controller.Find)
 	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Put("/{id}", controller.Update)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
 
 	return r

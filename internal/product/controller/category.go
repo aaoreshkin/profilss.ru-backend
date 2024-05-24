@@ -59,6 +59,26 @@ func (controller *CategoryController) First(w http.ResponseWriter, r *http.Reque
 	render.JSON(w, r, result)
 }
 
+func (controller *CategoryController) Update(w http.ResponseWriter, r *http.Request) {
+	// get id from request
+	id := chi.URLParam(r, "id")
+
+	entity := &entity.Category{}
+
+	if err := render.DecodeJSON(r.Body, entity); err != nil {
+		render.Render(w, r, common.ErrInvalidRequest(err))
+		return
+	}
+
+	result, err := controller.usecase.Update(entity, id)
+	if err != nil {
+		render.Render(w, r, common.ErrInvalidRequest(err))
+		return
+	}
+
+	render.JSON(w, r, result)
+}
+
 func (controller *CategoryController) Delete(w http.ResponseWriter, r *http.Request) {
 	// get id from request
 	id := chi.URLParam(r, "id")

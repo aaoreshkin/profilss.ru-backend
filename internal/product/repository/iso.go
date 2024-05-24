@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/oreshkindev/profilss.ru-backend/internal/database"
 	"github.com/oreshkindev/profilss.ru-backend/internal/product/entity"
+	"gorm.io/gorm"
 )
 
 type IsoRepository struct {
@@ -27,6 +28,10 @@ func (repository *IsoRepository) First(id string) (*entity.Iso, error) {
 	entity := &entity.Iso{}
 
 	return entity, repository.database.Where("id = ?", id).First(&entity).Error
+}
+
+func (repository *IsoRepository) Update(entry *entity.Iso, id string) (*entity.Iso, error) {
+	return entry, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Model(&entry).Where("id = ?", id).Updates(&entry).Error
 }
 
 func (repository *IsoRepository) Delete(id string) error {

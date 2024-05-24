@@ -22,7 +22,7 @@ func (repository *ProductRepository) Create(entity *entity.Product) (*entity.Pro
 func (repository *ProductRepository) Find() ([]entity.Product, error) {
 	entity := []entity.Product{}
 
-	return entity, repository.database.Debug().Preload(clause.Associations).Preload("Isos." + clause.Associations).Find(&entity).Error
+	return entity, repository.database.Preload(clause.Associations).Preload("Isos." + clause.Associations).Find(&entity).Error
 }
 
 func (repository *ProductRepository) First(id string) (*entity.Product, error) {

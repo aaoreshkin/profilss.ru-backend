@@ -4,6 +4,7 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
+	"path/filepath"
 )
 
 type DocUsecase struct {
@@ -19,13 +20,13 @@ func NewDocUsecase() *DocUsecase {
 
 func (usecase *DocUsecase) Create(fileName string, fileBody multipart.File) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := os.Mkdir(path+"/in/", 0755)
+		err := os.Mkdir(path+"/in/", os.ModePerm)
 		if err != nil {
 			return err
 		}
 	}
 
-	r, err := os.Create(path + "/in/" + fileName)
+	r, err := os.Create(filepath.Join(path+"/in/", fileName))
 	if err != nil {
 
 		return err

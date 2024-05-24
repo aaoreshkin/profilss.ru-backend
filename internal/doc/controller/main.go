@@ -20,16 +20,20 @@ func NewDocController(usecase entity.DocUsecase) *DocController {
 }
 
 func (controller *DocController) Create(w http.ResponseWriter, r *http.Request) {
-	r.ParseMultipartForm(10 << 20)
-
-	fileBody, header, err := r.FormFile("file")
+	err := r.ParseMultipartForm(32 << 20) // 32MB is the max memory use, adjust if needed
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		render.Render(w, r, common.ErrInvalidRequest(err))
 		return
 	}
-	defer fileBody.Close()
 
-	if err := controller.usecase.Create(header.Filename, fileBody); err != nil {
+	body, header, err := r.FormFile("file")
+	if err != nil {
+		render.Render(w, r, common.ErrInvalidRequest(err))
+		return
+	}
+	defer body.Close()
+
+	if err := controller.usecase.Create(header.Filename, body); err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
 		return
 	}
