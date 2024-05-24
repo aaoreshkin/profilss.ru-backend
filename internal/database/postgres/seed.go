@@ -17,10 +17,6 @@ func NewSeed(database *Postgres) (*Seed, error) {
 
 func (s *Seed) Seed() error {
 
-	if err := s.Iso(); err != nil {
-		return err
-	}
-
 	if err := s.Category(); err != nil {
 		return err
 	}
@@ -36,166 +32,193 @@ func (s *Seed) Seed() error {
 	return nil
 }
 
-func (s *Seed) Iso() error {
-	entries := []product.Iso{
-		{
-			Name: "ГОСТ 3262-75",
-		},
-		{
-			Name: "ГОСТ 10704-91",
-		},
-		{
-			Name: "ГОСТ 10705-80",
-		},
-		{
-			Name: "ГОСТ 8639-82",
-		},
-		{
-			Name: "ГОСТ 8645-68",
-		},
-		{
-			Name: "ГОСТ 10707-80",
-		},
-		{
-			Name: "ГОСТ 8644-68 (тип А и тип В)",
-		},
-		{
-			Name: "ГОСТ 8642-68",
-		},
-		{
-			Name: "ГОСТ 34028-16",
-		},
-		{
-			Name: "ГОСТ 2590-2006",
-		},
-		{
-			Name: "ГОСТ 30136-95",
-		},
-		{
-			Name: "ГОСТ 8509-93",
-		},
-		{
-			Name: "ГОСТ 103-2006 МТ",
-		},
-		{
-			Name: "ГОСТ 2591-2006",
-		},
-		{
-			Name: "ГОСТ 16523-97",
-		},
-	}
-
-	return s.Create(&entries).Error
-}
-
 func (s *Seed) Category() error {
-	characteristic := []product.Category{
+	category := []product.Category{
 		{
-			Name: "Трубы стальные эл/сварные прямошовные",
+			Name: "Круглые",
 			File: product.File{
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   1,
+				Name: "Трубы стальные эл/сварные прямошовные",
+			},
+			Iso: []product.Iso{
+				{
+					Name: "ГОСТ 10704-91",
+				},
+				{
+					Name: "ГОСТ 10707-80",
+				},
 			},
 		},
 		{
-			Name: "Трубы стальные квадратные эл/сварные прямошовные",
+			Name: "Квадратные",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   1,
+				Name: "Трубы стальные эл/сварные прямошовные",
+			},
+			Iso: []product.Iso{
+				{
+					Name: "ГОСТ 8639-82",
+				},
 			},
 		},
 		{
-			Name: "Трубы стальные круглые эл/сварные прямошовные",
+			Name: "Прямоугольные",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   1,
+				Name: "Трубы стальные эл/сварные прямошовные",
+			},
+			Iso: []product.Iso{
+				{
+					Name: "ГОСТ 8645-68",
+				},
 			},
 		},
 		{
-			Name: "Трубы стальные прямоугольные эл/сварные прямошовные",
+			Name: "Плоскоовальные",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   1,
+				Name: "Трубы стальные эл/сварные прямошовные",
+			},
+			Iso: []product.Iso{
+				{
+					Name: "ГОСТ 8644-68 (тип А и тип В)",
+				},
+				{
+					Name: "ГОСТ 8642-68",
+				},
 			},
 		},
 		{
-			Name: "Трубы стальные плоскоовальные эл/сварные прямошовные",
+			Name: "Овальные",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   1,
+				Name: "Трубы стальные эл/сварные прямошовные",
 			},
 		},
 		{
-			Name: "Трубы стальные овальные эл/сварные прямошовные",
+			Name: "Арочные",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
 			},
-		},
-		{
-			Name: "Трубы стальные арочные эл/сварные прямошовные",
-			File: product.File{
-				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+			SubCategory: product.SubCategory{
+				ID:   1,
+				Name: "Трубы стальные эл/сварные прямошовные",
 			},
 		},
 		{
 			Name: "Арматура A III",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   2,
+				Name: "Прочее",
 			},
 		},
 		{
-			Name: "Арматура A I круг",
+			Name: "Круг (Арматура A I)",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   2,
+				Name: "Прочее",
 			},
 		},
 		{
 			Name: "Уголок",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   2,
+				Name: "Прочее",
 			},
 		},
 		{
 			Name: "Полоса",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   2,
+				Name: "Прочее",
 			},
 		},
 		{
 			Name: "Квадрат",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   2,
+				Name: "Прочее",
 			},
 		},
 		{
 			Name: "Лист г/к",
 			File: product.File{
 				ID:      1,
-				Preview: "preview.png",
-				Video:   "video.mp4",
+				Preview: "example.jpg",
+				Video:   "example.mp4",
+			},
+			SubCategory: product.SubCategory{
+				ID:   2,
+				Name: "Металлопрокат",
 			},
 		},
 	}
 
-	return s.Create(&characteristic).Error
+	return s.Create(&category).Error
+}
+
+func (s *Seed) SubCategory() error {
+	sub_category := []product.SubCategory{
+		{
+			Name: "Трубы стальные эл/сварные прямошовные",
+		},
+		{
+			Name: "Прочее",
+		},
+	}
+
+	return s.Create(&sub_category).Error
 }
 
 func (s *Seed) Permission() error {

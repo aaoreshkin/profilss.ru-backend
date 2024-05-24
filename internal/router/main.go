@@ -130,6 +130,8 @@ func (router *Router) ProductHandler() chi.Router {
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Put("/{id}", controller.Update)
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
 
+	r.Post("/dump-excel", controller.DumpExcel)
+
 	r.Mount("/characteristic", router.CharacteristicHandler())
 	r.Mount("/category", router.CategoryHandler())
 	r.Mount("/iso", router.IsoHandler())

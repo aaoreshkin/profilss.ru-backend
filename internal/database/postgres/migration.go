@@ -18,6 +18,7 @@ func Migrate(database *Postgres) error {
 		&product.Iso{},
 		&product.Characteristic{},
 		&product.Category{},
+		&product.SubCategory{},
 		&product.File{},
 		&product.Product{},
 		&bid.Bid{},

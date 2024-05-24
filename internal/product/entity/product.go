@@ -7,7 +7,6 @@ type (
 		ID               uint64         `json:"id"`
 		Category         Category       `json:"category" gorm:"foreignKey:CategoryID;constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
 		CategoryID       uint64         `json:"-"`
-		Isos             []Iso          `json:"isos" gorm:"many2many:products_isos;constraint:OnDelete:CASCADE;"`
 		Characteristic   Characteristic `json:"characteristic" gorm:"foreignKey:CharacteristicID;constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
 		CharacteristicID uint64         `json:"-"`
 		CreatedAt        time.Time      `json:"created_at" gorm:"default:now()"`

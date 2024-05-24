@@ -3,7 +3,7 @@ package entity
 type (
 	Iso struct {
 		ID   uint64 `json:"id"`
-		Name string `json:"name"`
+		Name string `json:"name" gorm:"unique"`
 	}
 
 	IsoUsecase interface {
