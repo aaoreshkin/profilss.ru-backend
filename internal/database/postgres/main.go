@@ -27,11 +27,11 @@ func Dial(config *config.Database) (*Postgres, error) {
 		database = &Postgres{conn}
 	})
 
-	// if database != nil {
-	// 	if err := Migrate(database); err != nil {
-	// 		return nil, err
-	// 	}
-	// }
+	if database != nil {
+		if err := Migrate(database); err != nil {
+			return nil, err
+		}
+	}
 
 	return database, nil
 }

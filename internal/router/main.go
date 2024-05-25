@@ -134,6 +134,7 @@ func (router *Router) ProductHandler() chi.Router {
 
 	r.Mount("/characteristic", router.CharacteristicHandler())
 	r.Mount("/category", router.CategoryHandler())
+	r.Mount("/sub-category", router.SubCategoryHandler())
 	r.Mount("/iso", router.IsoHandler())
 
 	return r
@@ -156,6 +157,20 @@ func (router *Router) CategoryHandler() chi.Router {
 	r := chi.NewRouter()
 
 	controller := router.manager.Product.CategoryController
+
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
+	r.Get("/", controller.Find)
+	r.Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Put("/{id}", controller.Update)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
+}
+
+func (router *Router) SubCategoryHandler() chi.Router {
+	r := chi.NewRouter()
+
+	controller := router.manager.Product.SubCategoryController
 
 	r.With(router.RBACMiddleware([]Rule{Superuser})).Post("/", controller.Create)
 	r.Get("/", controller.Find)

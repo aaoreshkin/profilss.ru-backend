@@ -23,6 +23,10 @@ type Manager struct {
 	CategoryRepository repository.CategoryRepository
 	CategoryUsecase    usecase.CategoryUsecase
 	CategoryController controller.CategoryController
+
+	SubCategoryRepository repository.SubCategoryRepository
+	SubCategoryUsecase    usecase.SubCategoryUsecase
+	SubCategoryController controller.SubCategoryController
 }
 
 func NewManager(database *database.Database) *Manager {
@@ -42,6 +46,10 @@ func NewManager(database *database.Database) *Manager {
 	categoryUsecase := usecase.NewCategoryUsecase(categoryRepository)
 	categoryController := controller.NewCategoryController(categoryUsecase)
 
+	subcategoryRepository := repository.NewSubCategoryRepository(database)
+	subcategoryUsecase := usecase.NewSubCategoryUsecase(subcategoryRepository)
+	subcategoryController := controller.NewSubCategoryController(subcategoryUsecase)
+
 	return &Manager{
 		ProductRepository: *productRepository,
 		ProductUsecase:    *productUsecase,
@@ -58,5 +66,9 @@ func NewManager(database *database.Database) *Manager {
 		CategoryRepository: *categoryRepository,
 		CategoryUsecase:    *categoryUsecase,
 		CategoryController: *categoryController,
+
+		SubCategoryRepository: *subcategoryRepository,
+		SubCategoryUsecase:    *subcategoryUsecase,
+		SubCategoryController: *subcategoryController,
 	}
 }

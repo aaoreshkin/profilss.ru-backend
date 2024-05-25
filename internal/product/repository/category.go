@@ -32,6 +32,10 @@ func (repository *CategoryRepository) First(id string) (*entity.Category, error)
 }
 
 func (repository *CategoryRepository) Update(entry *entity.Category, id string) (*entity.Category, error) {
+	if r := repository.database.Model(&entity.Category{ID: entry.ID}).Association("Iso").Clear(); r != nil {
+		return nil, r
+	}
+
 	return entry, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Model(&entry).Where("id = ?", id).Updates(&entry).Error
 }
 
