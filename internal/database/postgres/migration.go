@@ -6,6 +6,7 @@ import (
 	post "github.com/oreshkindev/profilss.ru-backend/internal/post/entity"
 	product "github.com/oreshkindev/profilss.ru-backend/internal/product/entity"
 	service "github.com/oreshkindev/profilss.ru-backend/internal/service/entity"
+	setting "github.com/oreshkindev/profilss.ru-backend/internal/setting/entity"
 	user "github.com/oreshkindev/profilss.ru-backend/internal/user/entity"
 )
 
@@ -23,6 +24,10 @@ func Migrate(database *Postgres) error {
 		&product.Product{},
 		&bid.Bid{},
 		&hr.Hr{},
+		&setting.Setting{},
+		&setting.Contact{},
+		&setting.Media{},
+		&setting.Employee{},
 	}
 
 	// Use it for development only
