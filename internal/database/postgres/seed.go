@@ -37,8 +37,8 @@ func (s *Seed) Category() error {
 		{
 			Name: "Круглые",
 			File: product.File{
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   1,
@@ -56,9 +56,8 @@ func (s *Seed) Category() error {
 		{
 			Name: "Квадратные",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   1,
@@ -73,9 +72,8 @@ func (s *Seed) Category() error {
 		{
 			Name: "Прямоугольные",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   1,
@@ -90,9 +88,8 @@ func (s *Seed) Category() error {
 		{
 			Name: "Плоскоовальные",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   1,
@@ -110,9 +107,8 @@ func (s *Seed) Category() error {
 		{
 			Name: "Овальные",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   1,
@@ -122,9 +118,8 @@ func (s *Seed) Category() error {
 		{
 			Name: "Арочные",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   1,
@@ -134,69 +129,63 @@ func (s *Seed) Category() error {
 		{
 			Name: "Арматура A III",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   2,
-				Name: "Прочее",
+				Name: "Металлопрокат",
 			},
 		},
 		{
 			Name: "Круг (Арматура A I)",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   2,
-				Name: "Прочее",
+				Name: "Металлопрокат",
 			},
 		},
 		{
 			Name: "Уголок",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   2,
-				Name: "Прочее",
+				Name: "Металлопрокат",
 			},
 		},
 		{
 			Name: "Полоса",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   2,
-				Name: "Прочее",
+				Name: "Металлопрокат",
 			},
 		},
 		{
 			Name: "Квадрат",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   2,
-				Name: "Прочее",
+				Name: "Металлопрокат",
 			},
 		},
 		{
 			Name: "Лист г/к",
 			File: product.File{
-				ID:      1,
-				Preview: "example.jpg",
-				Video:   "example.mp4",
+				Image: "example.jpg",
+				Video: "example.mp4",
 			},
 			SubCategory: product.SubCategory{
 				ID:   2,
@@ -214,7 +203,7 @@ func (s *Seed) SubCategory() error {
 			Name: "Трубы стальные эл/сварные прямошовные",
 		},
 		{
-			Name: "Прочее",
+			Name: "Металлопрокат",
 		},
 	}
 

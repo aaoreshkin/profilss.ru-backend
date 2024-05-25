@@ -16,7 +16,7 @@ func NewCategoryRepository(database *database.Database) *CategoryRepository {
 }
 
 func (repository *CategoryRepository) Create(entry *entity.Category) (*entity.Category, error) {
-	return entry, repository.database.Create(&entry).Error
+	return entry, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Create(&entry).Error
 }
 
 func (repository *CategoryRepository) Find() ([]entity.Category, error) {
@@ -33,6 +33,10 @@ func (repository *CategoryRepository) First(id string) (*entity.Category, error)
 
 func (repository *CategoryRepository) Update(entry *entity.Category, id string) (*entity.Category, error) {
 	if r := repository.database.Model(&entity.Category{ID: entry.ID}).Association("Iso").Clear(); r != nil {
+		return nil, r
+	}
+
+	if r := repository.database.Model(&entity.Category{ID: entry.ID}).Association("File").Clear(); r != nil {
 		return nil, r
 	}
 

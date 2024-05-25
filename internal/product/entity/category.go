@@ -17,9 +17,9 @@ type (
 	}
 
 	File struct {
-		ID      uint64 `json:"id"`
-		Preview string `json:"preview"`
-		Video   string `json:"video"`
+		ID    uint64 `json:"id"`
+		Image string `json:"image"`
+		Video string `json:"video"`
 	}
 
 	CategoryUsecase interface {

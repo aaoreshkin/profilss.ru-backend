@@ -11,7 +11,7 @@ type DocUsecase struct {
 }
 
 var (
-	path = os.Getenv("REMOTE_PATH")
+	destination = os.Getenv("REMOTE_PATH")
 )
 
 func NewDocUsecase() *DocUsecase {
@@ -19,14 +19,25 @@ func NewDocUsecase() *DocUsecase {
 }
 
 func (usecase *DocUsecase) Create(fileName string, fileBody multipart.File) error {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := os.Mkdir(path+"/in/", os.ModePerm)
+
+	var (
+		path string
+	)
+
+	if filepath.Ext(fileName) == ".png" || filepath.Ext(fileName) == ".jpg" || filepath.Ext(fileName) == ".jpeg" {
+		path = "/in/"
+	} else {
+		path = "/media/"
+	}
+
+	if _, err := os.Stat(filepath.Join(destination, path)); os.IsNotExist(err) {
+		err := os.Mkdir(filepath.Join(destination, path), os.ModePerm)
 		if err != nil {
 			return err
 		}
 	}
 
-	r, err := os.Create(filepath.Join(path+"/in/", fileName))
+	r, err := os.Create(filepath.Join(destination, path, fileName))
 	if err != nil {
 
 		return err

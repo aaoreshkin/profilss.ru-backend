@@ -8,8 +8,8 @@ import (
 
 type (
 	Config struct {
-		Host, Port, Path, SecretKey string
-		Database                    Database
+		Host, Port, SecretKey string
+		Database              Database
 	}
 
 	Database struct {
@@ -28,7 +28,6 @@ func NewConfig() (*Config, error) {
 		config = &Config{
 			Host:      env("HOST"),
 			Port:      env("PORT"),
-			Path:      env("REMOTE_PATH"),
 			SecretKey: env("SECRET_KEY"),
 			Database: Database{
 				URL: env("DB_URL"),
