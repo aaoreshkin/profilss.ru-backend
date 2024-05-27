@@ -2,7 +2,6 @@ package internal
 
 import (
 	"github.com/oreshkindev/profilss.ru-backend/internal/bid"
-	"github.com/oreshkindev/profilss.ru-backend/internal/chat"
 	"github.com/oreshkindev/profilss.ru-backend/internal/database"
 	"github.com/oreshkindev/profilss.ru-backend/internal/doc"
 	"github.com/oreshkindev/profilss.ru-backend/internal/hr"
@@ -10,11 +9,12 @@ import (
 	"github.com/oreshkindev/profilss.ru-backend/internal/product"
 	"github.com/oreshkindev/profilss.ru-backend/internal/service"
 	"github.com/oreshkindev/profilss.ru-backend/internal/setting"
+	"github.com/oreshkindev/profilss.ru-backend/internal/support"
 	"github.com/oreshkindev/profilss.ru-backend/internal/user"
 )
 
 type Manager struct {
-	Chat    *chat.Manager
+	Support *support.Manager
 	Doc     *doc.Manager
 	Bid     *bid.Manager
 	Post    *post.Manager
@@ -27,7 +27,7 @@ type Manager struct {
 
 func NewManager(database *database.Database) *Manager {
 	return &Manager{
-		Chat:    chat.NewManager(database),
+		Support: support.NewManager(database),
 		Doc:     doc.NewManager(),
 		Bid:     bid.NewManager(database),
 		Post:    post.NewManager(database),

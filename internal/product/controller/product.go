@@ -140,7 +140,7 @@ func (controller *ProductController) DumpExcel(w http.ResponseWriter, r *http.Re
 	}
 
 	var (
-		headerStyle, boldStyle, defaultStyle int
+		headerStyle, boldStyle, defaultStyle, sizeStyle int
 	)
 
 	if headerStyle, err = f.NewStyle(&excelize.Style{
@@ -159,6 +159,13 @@ func (controller *ProductController) DumpExcel(w http.ResponseWriter, r *http.Re
 	if boldStyle, err = f.NewStyle(&excelize.Style{
 		Alignment: &excelize.Alignment{Vertical: "center", Horizontal: "center", Indent: 1},
 		Font:      &excelize.Font{Bold: true, Size: 14},
+	}); err != nil {
+		fmt.Println(err)
+	}
+
+	if sizeStyle, err = f.NewStyle(&excelize.Style{
+		Alignment: &excelize.Alignment{Vertical: "center", Horizontal: "center", Indent: 1},
+		Font:      &excelize.Font{Size: 24},
 	}); err != nil {
 		fmt.Println(err)
 	}
@@ -217,21 +224,27 @@ func (controller *ProductController) DumpExcel(w http.ResponseWriter, r *http.Re
 				fmt.Println(err)
 			}
 
-			// Здесь мы вставляем список ISO в поле "ГОСТ"
-			isoList := ""
+			// Здесь мы вставляем список ISO в поле "ГОСТ" без дублирования
+			isoSet := make(map[string]struct{})
 
 			for _, p := range products {
 				for _, iso := range p.Category.Iso {
-					isoList += iso.Name + ", "
-				}
-				// Удаляем последнюю запятую
-				isoList = strings.TrimSuffix(isoList, ", ")
-
-				if err = f.SetCellValue("Страница 1", "A"+strconv.Itoa(j), isoList); err != nil {
-					fmt.Println(err)
-					return
+					isoSet[iso.Name] = struct{}{}
 				}
 			}
+
+			isoList := ""
+			for isoName := range isoSet {
+				isoList += isoName + ", "
+			}
+			// Удаляем последнюю запятую
+			isoList = strings.TrimSuffix(isoList, ", ")
+
+			if err = f.SetCellValue("Страница 1", "A"+strconv.Itoa(j), isoList); err != nil {
+				fmt.Println(err)
+				return
+			}
+
 			// Вставляем название категории в колонку A
 			if err = f.SetCellValue("Страница 1", "A"+strconv.Itoa(j), category.Name+" "+isoList); err != nil {
 				fmt.Println(err)
@@ -254,20 +267,25 @@ func (controller *ProductController) DumpExcel(w http.ResponseWriter, r *http.Re
 				fmt.Println(err)
 			}
 
-			// Здесь мы вставляем список ISO в поле "ГОСТ"
-			isoList := ""
+			// Здесь мы вставляем список ISO в поле "ГОСТ" без дублирования
+			isoSet := make(map[string]struct{})
 
 			for _, p := range products {
 				for _, iso := range p.Category.Iso {
-					isoList += iso.Name + ", "
+					isoSet[iso.Name] = struct{}{}
 				}
-				// Удаляем последнюю запятую
-				isoList = strings.TrimSuffix(isoList, ", ")
+			}
 
-				if err = f.SetCellValue("Страница 1", "A"+strconv.Itoa(j), isoList); err != nil {
-					fmt.Println(err)
-					return
-				}
+			isoList := ""
+			for isoName := range isoSet {
+				isoList += isoName + ", "
+			}
+			// Удаляем последнюю запятую
+			isoList = strings.TrimSuffix(isoList, ", ")
+
+			if err = f.SetCellValue("Страница 1", "A"+strconv.Itoa(j), isoList); err != nil {
+				fmt.Println(err)
+				return
 			}
 
 			// Вставляем название категории в колонку A
@@ -309,6 +327,9 @@ func (controller *ProductController) DumpExcel(w http.ResponseWriter, r *http.Re
 				fmt.Println(err)
 				return
 			}
+			if err = f.SetCellStyle("Страница 1", "A"+strconv.Itoa(j), "E"+strconv.Itoa(j), headerStyle); err != nil {
+				fmt.Println(err)
+			}
 			if err = f.SetSheetRow("Страница 1", cell, &dataRow); err != nil {
 				fmt.Println(err)
 				return
@@ -347,6 +368,98 @@ func (controller *ProductController) DumpExcel(w http.ResponseWriter, r *http.Re
 			}
 		}
 	}
+
+	j += 2 // Переходим к следующей строке для данных товара
+
+	// Выполняем объединение ячеек
+	if err := f.MergeCell("Страница 1", "A"+strconv.Itoa(j), "E"+strconv.Itoa(j)); err != nil {
+		fmt.Println(err)
+	}
+	if err := f.SetRowHeight("Страница 1", j, 30); err != nil {
+		fmt.Println(err)
+	}
+	if err = f.SetCellStyle("Страница 1", "A"+strconv.Itoa(j), "B"+strconv.Itoa(j), defaultStyle); err != nil {
+		fmt.Println(err)
+	}
+
+	// Вставляем подвал таблицы
+	if err = f.SetCellValue("Страница 1", "A"+strconv.Itoa(j), "Осуществляем доставку и порезку трубы!"); err != nil {
+		fmt.Println(err)
+	}
+
+	j++ // Переходим к следующей строке для данных товара
+
+	// Выполняем объединение ячеек
+	if err := f.MergeCell("Страница 1", "A"+strconv.Itoa(j), "E"+strconv.Itoa(j)); err != nil {
+		fmt.Println(err)
+	}
+	if err := f.SetRowHeight("Страница 1", j, 30); err != nil {
+		fmt.Println(err)
+	}
+	if err = f.SetCellStyle("Страница 1", "A"+strconv.Itoa(j), "B"+strconv.Itoa(j), defaultStyle); err != nil {
+		fmt.Println(err)
+	}
+
+	// Вставляем подвал таблицы
+	if err = f.SetCellValue("Страница 1", "A"+strconv.Itoa(j), "e-mail: kng@profilss.ru"); err != nil {
+		fmt.Println(err)
+	}
+
+	j++ // Переходим к следующей строке для данных товара
+
+	// Выполняем объединение ячеек
+	if err := f.MergeCell("Страница 1", "A"+strconv.Itoa(j), "E"+strconv.Itoa(j)); err != nil {
+		fmt.Println(err)
+	}
+	if err := f.SetRowHeight("Страница 1", j, 30); err != nil {
+		fmt.Println(err)
+	}
+	if err = f.SetCellStyle("Страница 1", "A"+strconv.Itoa(j), "B"+strconv.Itoa(j), defaultStyle); err != nil {
+		fmt.Println(err)
+	}
+
+	// Вставляем подвал таблицы
+	if err = f.SetCellValue("Страница 1", "A"+strconv.Itoa(j), "По всем интересующим вас вопросам обращайтесь"); err != nil {
+		fmt.Println(err)
+	}
+
+	j++ // Переходим к следующей строке для данных товара
+
+	// Выполняем объединение ячеек
+	if err := f.MergeCell("Страница 1", "A"+strconv.Itoa(j), "E"+strconv.Itoa(j)); err != nil {
+		fmt.Println(err)
+	}
+	if err := f.SetRowHeight("Страница 1", j, 30); err != nil {
+		fmt.Println(err)
+	}
+	if err = f.SetCellStyle("Страница 1", "A"+strconv.Itoa(j), "B"+strconv.Itoa(j), sizeStyle); err != nil {
+		fmt.Println(err)
+	}
+
+	// Вставляем подвал таблицы
+	if err = f.SetCellValue("Страница 1", "A"+strconv.Itoa(j), "Курмышева Наталья"); err != nil {
+		fmt.Println(err)
+	}
+
+	j++ // Переходим к следующей строке для данных товара
+
+	// Выполняем объединение ячеек
+	if err := f.MergeCell("Страница 1", "A"+strconv.Itoa(j), "E"+strconv.Itoa(j)); err != nil {
+		fmt.Println(err)
+	}
+	if err := f.SetRowHeight("Страница 1", j, 30); err != nil {
+		fmt.Println(err)
+	}
+	if err = f.SetCellStyle("Страница 1", "A"+strconv.Itoa(j), "B"+strconv.Itoa(j), defaultStyle); err != nil {
+		fmt.Println(err)
+	}
+
+	// Вставляем подвал таблицы
+	if err = f.SetCellValue("Страница 1", "A"+strconv.Itoa(j), "8-902-380-20-11"); err != nil {
+		fmt.Println(err)
+	}
+
+	j++ // Переходим к следующей строке для данных товара
 
 	// Save spreadsheet by the given path.
 	if err := f.SaveAs(filepath.Join(destination, "/doc/", "Профиль-С прайс-лист 2024.xlsx")); err != nil {

@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
+	"github.com/olahol/melody"
 	"github.com/oreshkindev/profilss.ru-backend/common"
 	"github.com/oreshkindev/profilss.ru-backend/internal"
 )
@@ -41,7 +43,7 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 	router.Use(middleware.Logger)
 
 	router.Route("/v1", func(r chi.Router) {
-		r.Mount("/chat", router.ChatHandler())
+		r.Mount("/support", router.SupportHandler())
 		r.Mount("/bid", router.BidHandler())
 		r.Mount("/post", router.PostHandler())
 		r.Mount("/service", router.ServiceHandler())
@@ -54,12 +56,28 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 	return router, nil
 }
 
-func (router *Router) ChatHandler() chi.Router {
+func (router *Router) SupportHandler() chi.Router {
 	r := chi.NewRouter()
 
-	controller := router.manager.Chat.ChatController
+	m := melody.New()
 
-	r.Get("/ws/{id}", controller.Broadcast)
+	controller := router.manager.Support.SupportController
+
+	r.Get("/room/{id}", func(w http.ResponseWriter, r *http.Request) {
+		m.HandleRequest(w, r)
+
+		m.HandleMessage(func(s *melody.Session, message []byte) {
+			response, err := controller.Broadcast(message)
+			if err != nil {
+				log.Println(err)
+			}
+
+			m.BroadcastFilter(response, func(q *melody.Session) bool {
+				return q.Request.URL.Path == s.Request.URL.Path
+			})
+		})
+	})
+
 	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Post("/", controller.Create)
 	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", controller.Find)
 	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/{id}", controller.First)
