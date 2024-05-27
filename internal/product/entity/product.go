@@ -17,7 +17,7 @@ type (
 		Create(*Product) (*Product, error)
 		Find() ([]Product, error)
 		First(string) (*Product, error)
-		Update(*Product, string) (*Product, error)
+		Update(*Product) (*Product, error)
 		Delete(string) error
 	}
 
@@ -25,7 +25,7 @@ type (
 		Create(*Product) (*Product, error)
 		Find() ([]Product, error)
 		First(string) (*Product, error)
-		Update(*Product, string) (*Product, error)
+		Update(*Product) (*Product, error)
 		Delete(string) error
 	}
 )

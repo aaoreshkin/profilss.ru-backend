@@ -41,6 +41,7 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 	router.Use(middleware.Logger)
 
 	router.Route("/v1", func(r chi.Router) {
+		r.Mount("/chat", router.ChatHandler())
 		r.Mount("/bid", router.BidHandler())
 		r.Mount("/post", router.PostHandler())
 		r.Mount("/service", router.ServiceHandler())
@@ -51,6 +52,20 @@ func NewRouter(manager *internal.Manager) (*Router, error) {
 		r.Mount("/hr", router.HrHandler())
 	})
 	return router, nil
+}
+
+func (router *Router) ChatHandler() chi.Router {
+	r := chi.NewRouter()
+
+	controller := router.manager.Chat.ChatController
+
+	r.Get("/ws/{id}", controller.Broadcast)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Post("/", controller.Create)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", controller.Find)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/{id}", controller.First)
+	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+
+	return r
 }
 
 func (router *Router) DocHandler() chi.Router {

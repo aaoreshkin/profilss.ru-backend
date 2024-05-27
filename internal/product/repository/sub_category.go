@@ -31,8 +31,8 @@ func (repository *SubCategoryRepository) First(id string) (*entity.SubCategory, 
 	return entry, repository.database.Preload(clause.Associations).Where("id = ?", id).First(&entry).Error
 }
 
-func (repository *SubCategoryRepository) Update(entry *entity.SubCategory, id string) (*entity.SubCategory, error) {
-	return entry, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Model(&entry).Where("id = ?", id).Updates(&entry).Error
+func (repository *SubCategoryRepository) Update(entry *entity.SubCategory) (*entity.SubCategory, error) {
+	return entry, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Save(&entry).Error
 }
 
 func (repository *SubCategoryRepository) Delete(id string) error {

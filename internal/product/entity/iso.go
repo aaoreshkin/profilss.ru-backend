@@ -10,7 +10,7 @@ type (
 		Create(*Iso) (*Iso, error)
 		Find() ([]Iso, error)
 		First(string) (*Iso, error)
-		Update(*Iso, string) (*Iso, error)
+		Update(*Iso) (*Iso, error)
 		Delete(string) error
 	}
 
@@ -18,7 +18,7 @@ type (
 		Create(*Iso) (*Iso, error)
 		Find() ([]Iso, error)
 		First(string) (*Iso, error)
-		Update(*Iso, string) (*Iso, error)
+		Update(*Iso) (*Iso, error)
 		Delete(string) error
 	}
 )

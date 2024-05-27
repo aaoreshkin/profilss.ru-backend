@@ -60,17 +60,15 @@ func (controller *IsoController) First(w http.ResponseWriter, r *http.Request) {
 }
 
 func (controller *IsoController) Update(w http.ResponseWriter, r *http.Request) {
-	// get id from request
-	id := chi.URLParam(r, "id")
 
-	entity := &entity.Iso{}
+	entry := &entity.Iso{}
 
-	if err := render.DecodeJSON(r.Body, entity); err != nil {
+	if err := render.DecodeJSON(r.Body, entry); err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
 		return
 	}
 
-	result, err := controller.usecase.Update(entity, id)
+	result, err := controller.usecase.Update(entry)
 	if err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
 		return

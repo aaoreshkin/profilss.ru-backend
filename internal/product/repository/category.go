@@ -31,7 +31,7 @@ func (repository *CategoryRepository) First(id string) (*entity.Category, error)
 	return entry, repository.database.Preload(clause.Associations).Where("id = ?", id).First(&entry).Error
 }
 
-func (repository *CategoryRepository) Update(entry *entity.Category, id string) (*entity.Category, error) {
+func (repository *CategoryRepository) Update(entry *entity.Category) (*entity.Category, error) {
 	if r := repository.database.Model(&entity.Category{ID: entry.ID}).Association("Iso").Clear(); r != nil {
 		return nil, r
 	}
@@ -40,7 +40,7 @@ func (repository *CategoryRepository) Update(entry *entity.Category, id string) 
 		return nil, r
 	}
 
-	return entry, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Model(&entry).Where("id = ?", id).Updates(&entry).Error
+	return entry, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Save(&entry).Error
 }
 
 func (repository *CategoryRepository) Delete(id string) error {

@@ -26,8 +26,8 @@ func (usecase *SubCategoryUsecase) First(id string) (*entity.SubCategory, error)
 	return usecase.repository.First(id)
 }
 
-func (usecase *SubCategoryUsecase) Update(entity *entity.SubCategory, id string) (*entity.SubCategory, error) {
-	return usecase.repository.Update(entity, id)
+func (usecase *SubCategoryUsecase) Update(entry *entity.SubCategory) (*entity.SubCategory, error) {
+	return usecase.repository.Update(entry)
 }
 
 func (usecase *SubCategoryUsecase) Delete(id string) error {

@@ -2,8 +2,10 @@ package controller
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -17,6 +19,10 @@ import (
 type ProductController struct {
 	usecase entity.ProductUsecase
 }
+
+var (
+	destination = os.Getenv("REMOTE_PATH")
+)
 
 func NewProductController(usecase entity.ProductUsecase) *ProductController {
 	return &ProductController{
@@ -65,21 +71,22 @@ func (controller *ProductController) First(w http.ResponseWriter, r *http.Reques
 }
 
 func (controller *ProductController) Update(w http.ResponseWriter, r *http.Request) {
-	// get id from request
-	id := chi.URLParam(r, "id")
 
-	entity := &entity.Product{}
+	entry := &entity.Product{}
 
-	if err := render.DecodeJSON(r.Body, entity); err != nil {
+	log.Println(entry.Published)
+
+	if err := render.DecodeJSON(r.Body, entry); err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
 		return
 	}
 
-	result, err := controller.usecase.Update(entity, id)
+	result, err := controller.usecase.Update(entry)
 	if err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
 		return
 	}
+	log.Println(result.Published)
 
 	render.JSON(w, r, result)
 }
@@ -105,7 +112,7 @@ func (controller *ProductController) DumpExcel(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	f, err := excelize.OpenFile(os.Getenv("REMOTE_PATH") + "/doc/" + "Профиль-С прайс-лист.xlsx")
+	f, err := excelize.OpenFile(filepath.Join(destination, "/doc/", "Профиль-С прайс-лист.xlsx"))
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -342,7 +349,7 @@ func (controller *ProductController) DumpExcel(w http.ResponseWriter, r *http.Re
 	}
 
 	// Save spreadsheet by the given path.
-	if err := f.SaveAs(os.Getenv("REMOTE_PATH") + "/doc/" + "Профиль-С прайс-лист 2024.xlsx"); err != nil {
+	if err := f.SaveAs(filepath.Join(destination, "/doc/", "Профиль-С прайс-лист 2024.xlsx")); err != nil {
 		fmt.Println(err)
 	}
 

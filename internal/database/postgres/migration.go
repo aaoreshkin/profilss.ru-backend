@@ -2,6 +2,7 @@ package postgres
 
 import (
 	bid "github.com/oreshkindev/profilss.ru-backend/internal/bid/entity"
+	chat "github.com/oreshkindev/profilss.ru-backend/internal/chat/entity"
 	hr "github.com/oreshkindev/profilss.ru-backend/internal/hr/entity"
 	post "github.com/oreshkindev/profilss.ru-backend/internal/post/entity"
 	product "github.com/oreshkindev/profilss.ru-backend/internal/product/entity"
@@ -28,6 +29,7 @@ func Migrate(database *Postgres) error {
 		&setting.Contact{},
 		&setting.Media{},
 		&setting.Employee{},
+		&chat.Chat{},
 	}
 
 	// Use it for development only

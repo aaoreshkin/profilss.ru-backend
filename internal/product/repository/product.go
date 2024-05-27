@@ -31,9 +31,9 @@ func (repository *ProductRepository) First(id string) (*entity.Product, error) {
 	return entity, repository.database.Where("id = ?", id).Preload(clause.Associations).Preload("Category." + clause.Associations).First(&entity).Error
 }
 
-func (repository *ProductRepository) Update(tmp *entity.Product, id string) (*entity.Product, error) {
+func (repository *ProductRepository) Update(entry *entity.Product) (*entity.Product, error) {
 
-	return tmp, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Model(&tmp).Where("id = ?", id).Updates(&tmp).Error
+	return entry, repository.database.Session(&gorm.Session{FullSaveAssociations: true}).Save(&entry).Error
 }
 
 func (repository *ProductRepository) Delete(id string) error {

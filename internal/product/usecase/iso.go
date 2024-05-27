@@ -26,8 +26,8 @@ func (usecase *IsoUsecase) First(id string) (*entity.Iso, error) {
 	return usecase.repository.First(id)
 }
 
-func (usecase *IsoUsecase) Update(entity *entity.Iso, id string) (*entity.Iso, error) {
-	return usecase.repository.Update(entity, id)
+func (usecase *IsoUsecase) Update(entry *entity.Iso) (*entity.Iso, error) {
+	return usecase.repository.Update(entry)
 }
 
 func (usecase *IsoUsecase) Delete(id string) error {

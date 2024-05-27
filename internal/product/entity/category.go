@@ -26,7 +26,7 @@ type (
 		Create(*Category) (*Category, error)
 		Find() ([]Category, error)
 		First(string) (*Category, error)
-		Update(*Category, string) (*Category, error)
+		Update(*Category) (*Category, error)
 		Delete(string) error
 	}
 
@@ -34,7 +34,7 @@ type (
 		Create(*Category) (*Category, error)
 		Find() ([]Category, error)
 		First(string) (*Category, error)
-		Update(*Category, string) (*Category, error)
+		Update(*Category) (*Category, error)
 		Delete(string) error
 	}
 )

@@ -16,7 +16,7 @@ type (
 		Create(*SubCategory) (*SubCategory, error)
 		Find() ([]SubCategory, error)
 		First(string) (*SubCategory, error)
-		Update(*SubCategory, string) (*SubCategory, error)
+		Update(*SubCategory) (*SubCategory, error)
 		Delete(string) error
 	}
 
@@ -24,7 +24,7 @@ type (
 		Create(*SubCategory) (*SubCategory, error)
 		Find() ([]SubCategory, error)
 		First(string) (*SubCategory, error)
-		Update(*SubCategory, string) (*SubCategory, error)
+		Update(*SubCategory) (*SubCategory, error)
 		Delete(string) error
 	}
 )
