@@ -29,10 +29,10 @@ func (repository *SupportRepository) First(id string) ([]entity.Support, error) 
 	return entry, repository.database.Where("session_id = ?", id).Find(&entry).Error
 }
 
-func (repository *SupportRepository) Update(entity *entity.Support) (*entity.Support, error) {
-	return entity, repository.database.Save(&entity).Error
+func (repository *SupportRepository) Update(id string) error {
+	return repository.database.Where("session_id = ?", id).Model(&entity.Support{}).Update("status", true).Error
 }
 
 func (repository *SupportRepository) Delete(id string) error {
-	return repository.database.Where("id = ?", id).Delete(&entity.Support{}).Error
+	return repository.database.Where("session_id = ?", id).Delete(&entity.Support{}).Error
 }

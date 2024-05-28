@@ -12,7 +12,7 @@ type (
 		Create(*Support) (*Support, error)
 		Find() ([]Support, error)
 		First(string) ([]Support, error)
-		Update(*Support) (*Support, error)
+		Update(string) error
 		Delete(string) error
 	}
 
@@ -20,7 +20,7 @@ type (
 		Create(*Support) (*Support, error)
 		Find() ([]Support, error)
 		First(string) ([]Support, error)
-		Update(*Support) (*Support, error)
+		Update(string) error
 		Delete(string) error
 	}
 )

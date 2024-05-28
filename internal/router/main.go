@@ -78,10 +78,10 @@ func (router *Router) SupportHandler() chi.Router {
 		})
 	})
 
-	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Post("/", controller.Create)
 	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/", controller.Find)
 	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Get("/{id}", controller.First)
-	r.With(router.RBACMiddleware([]Rule{Superuser})).Delete("/{id}", controller.Delete)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Put("/{id}", controller.Update)
+	r.With(router.RBACMiddleware([]Rule{Superuser, Manager})).Delete("/{id}", controller.Delete)
 
 	return r
 }

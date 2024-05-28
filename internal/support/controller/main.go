@@ -108,24 +108,19 @@ func (controller *SupportController) First(w http.ResponseWriter, r *http.Reques
 
 func (controller *SupportController) Update(w http.ResponseWriter, r *http.Request) {
 
-	entity := &entity.Support{}
+	id := chi.URLParam(r, "id")
 
-	if err := render.DecodeJSON(r.Body, entity); err != nil {
-		render.Render(w, r, common.ErrInvalidRequest(err))
-		return
-	}
-
-	result, err := controller.usecase.Update(entity)
+	err := controller.usecase.Update(id)
 	if err != nil {
 		render.Render(w, r, common.ErrInvalidRequest(err))
 		return
 	}
 
-	render.JSON(w, r, result)
+	render.JSON(w, r, nil)
 }
 
 func (controller *SupportController) Delete(w http.ResponseWriter, r *http.Request) {
-	// get id from request
+
 	id := chi.URLParam(r, "id")
 
 	err := controller.usecase.Delete(id)
