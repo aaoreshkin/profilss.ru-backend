@@ -11,6 +11,7 @@ type (
 		SubCategoryID uint64      `json:"-"`
 		Iso           []Iso       `json:"iso" gorm:"many2many:categories_isos;constraint:OnDelete:CASCADE;"`
 		Name          string      `json:"name"`
+		Type          string      `json:"type"`
 		Description   string      `json:"description"`
 		Published     bool        `json:"published" gorm:"default:false"`
 		CreatedAt     time.Time   `json:"created_at" gorm:"default:now()"`

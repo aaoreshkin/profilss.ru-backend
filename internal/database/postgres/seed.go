@@ -232,10 +232,6 @@ func (s *Seed) User() error {
 			Email:    "oreshkin.dev@outlook.com",
 			Password: "pAss1word*",
 		},
-		{
-			Email:    "ioreshkin@outlook.com",
-			Password: "pAss1word*",
-		},
 	}
 
 	var permissionID string

@@ -20,15 +20,7 @@ func NewDocUsecase() *DocUsecase {
 
 func (usecase *DocUsecase) Create(fileName string, fileBody multipart.File) error {
 
-	var (
-		path string
-	)
-
-	if filepath.Ext(fileName) == ".png" || filepath.Ext(fileName) == ".jpg" || filepath.Ext(fileName) == ".jpeg" {
-		path = "/in/"
-	} else {
-		path = "/media/"
-	}
+	path := "/in"
 
 	if _, err := os.Stat(filepath.Join(destination, path)); os.IsNotExist(err) {
 		err := os.Mkdir(filepath.Join(destination, path), os.ModePerm)

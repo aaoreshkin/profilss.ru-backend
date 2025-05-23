@@ -112,7 +112,7 @@ func (controller *ProductController) DumpExcel(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	f, err := excelize.OpenFile(filepath.Join(destination, "/doc/", "Профиль-С прайс-лист.xlsx"))
+	f, err := excelize.OpenFile(filepath.Join(destination, "/doc", "Профиль-С прайс-лист.xlsx"))
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -462,7 +462,7 @@ func (controller *ProductController) DumpExcel(w http.ResponseWriter, r *http.Re
 	j++ // Переходим к следующей строке для данных товара
 
 	// Save spreadsheet by the given path.
-	if err := f.SaveAs(filepath.Join(destination, "/doc/", "Профиль-С прайс-лист 2024.xlsx")); err != nil {
+	if err := f.SaveAs(filepath.Join(destination, "/doc", "Профиль-С прайс-лист 2025.xlsx")); err != nil {
 		fmt.Println(err)
 	}
 

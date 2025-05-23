@@ -36,7 +36,7 @@ func HashToken(email, permissionID string) (string, error) {
 
 	tokenString := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": subject,
-		"exp": time.Now().Add(time.Minute * 15).Unix(),
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
 	})
 
 	return tokenString.SignedString([]byte(SecretKey))
